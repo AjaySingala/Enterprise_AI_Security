@@ -21,16 +21,23 @@ python -c "import openai; print(openai.__version__)"
 python -m tests.llms.test_llm
 python -m tests.llms.test_llm_json
 
+# Feature 1: Prompt Injection Detection:
 python -m tests.prompt_injection.test_detector
 python -m tests.prompt_injection.test_classifier
 python -m tests.prompt_injection.test_engine
 
+# Feature 2: PII Detection:
 python -m tests.pii.test_pii_detector
 python -m tests.pii.test_pii_masker
 python -m tests.pii.test_pii_engine
 
+# Feature 3: Secret Detection:
 python -m tests.secrets.test_entropy
 python -m tests.secrets.test_detector
 python -m tests.secrets.test_masker
 python -m tests.secrets.test_engine
 
+# Feature 4: Confidential Data Detection:
+python -m tests.confidential.test_detector
+python -m tests.confidential.test_masker
+python -m tests.confidential.test_engine

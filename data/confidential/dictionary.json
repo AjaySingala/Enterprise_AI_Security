@@ -1,0 +1,33 @@
+{
+    "PROJECT": [
+        "Project Phoenix",
+        "Project Apollo",
+        "Project Titan",
+        "Project Falcon"
+    ],
+
+    "CUSTOMER": [
+        "Customer Alpha",
+        "Customer Omega",
+        "Customer Platinum"
+    ],
+
+    "STRATEGY": [
+        "pricing strategy",
+        "market strategy",
+        "go to market",
+        "roadmap"
+    ],
+
+    "FINANCIAL": [
+        "revenue forecast",
+        "profit margin",
+        "financial forecast",
+        "quarterly guidance"
+    ],
+
+    "SOURCE_CODE": [
+        "proprietary algorithm",
+        "internal source code"
+    ]
+}
