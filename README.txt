@@ -29,3 +29,8 @@ python -m tests.pii.test_pii_detector
 python -m tests.pii.test_pii_masker
 python -m tests.pii.test_pii_engine
 
+python -m tests.secrets.test_entropy
+python -m tests.secrets.test_detector
+python -m tests.secrets.test_masker
+python -m tests.secrets.test_engine
+
