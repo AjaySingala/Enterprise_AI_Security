@@ -40,7 +40,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
-from security.prompt_injection_engine import PromptInjectionEngine
+from security.prompt_injection.prompt_injection_engine import PromptInjectionEngine
 
 console = Console()
 

@@ -1,4 +1,4 @@
-from security.prompt_injection_engine import (
+from security.prompt_injection.prompt_injection_engine import (
     PromptInjectionEngine,
 )
 

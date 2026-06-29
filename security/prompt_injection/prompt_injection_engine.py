@@ -39,11 +39,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 
-from security.prompt_injection_detector import (
+from security.prompt_injection.prompt_injection_detector import (
     PromptInjectionDetector,
 )
 
-from security.prompt_injection_classifier import (
+from security.prompt_injection.prompt_injection_classifier import (
     PromptInjectionClassifier,
 )
 

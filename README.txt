@@ -1,9 +1,31 @@
 # To install packages:
 python -m pip install -r requirements.txt
 
-# Demo 1: demo01_prompt_injection.py
+# Why __init__.py?
+
+It tells Python that the directory should be treated as a package (or explicitly marks it as one). While modern Python (3.3+) supports implicit namespace packages in many cases, including __init__.py is still a good practice for a structured project like ours because it:
+
+Makes imports more predictable.
+Lets you control what the package exports.
+Allows package-level initialization if needed.
+Improves compatibility with tools, IDEs, linters, and some packaging workflows.
+
+# Demo 1 (Feature 1: Prompt Injection): demo01_prompt_injection.py
 # Run from root folder:
 python -m demos.demo01_prompt_injection
 
 # Check OPENAI SDK version.
 python -c "import openai; print(openai.__version__)"
+
+# Run tests:
+python -m tests.llms.test_llm
+python -m tests.llms.test_llm_json
+
+python -m tests.prompt_injection.test_detector
+python -m tests.prompt_injection.test_classifier
+python -m tests.prompt_injection.test_engine
+
+python -m tests.pii.test_pii_detector
+python -m tests.pii.test_pii_masker
+python -m tests.pii.test_pii_engine
+

@@ -1,4 +1,4 @@
-from security.prompt_injection_detector import PromptInjectionDetector
+from security.prompt_injection.prompt_injection_detector import PromptInjectionDetector
 
 detector = PromptInjectionDetector()
 
