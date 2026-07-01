@@ -1,49 +1,62 @@
 """
-Central logging utility.
+===============================================================================
+Enterprise AI Security Framework
+
+Enterprise Logger
+
+Version:
+    1.0.0
+
+Python:
+    3.13.11
+
+Usage:
+Instead of:
+--------
+print("--> Entering SecretDetector.detect")
+
+print("Prompt Injection detected.")
+
+print(exception)
+
+Do this:
+--------
+from common.logger import get_logger
+logger = get_logger(__name__)
+logger.info("Entering SecretDetector.detect")
+
+logger.warning("Prompt injection detected.")
+
+logger.exception("Unexpected error")
+
+===============================================================================
 """
 
 from __future__ import annotations
 
 import logging
-from pathlib import Path
+import sys
 
-from config.config import CONFIG
+###############################################################################
+# Configure Logger
+###############################################################################
+logging.basicConfig(
+    level=logging.INFO,
+    format=(
+        "%(asctime)s | "
+        "%(levelname)-8s | "
+        "%(name)s | "
+        "%(message)s"
+    ),
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+    ],
+)
 
-LOG_FOLDER = Path("logs")
-LOG_FOLDER.mkdir(exist_ok=True)
-
-LOGGER = logging.getLogger("EnterpriseAI")
-
-if not LOGGER.handlers:
-    LOGGER.setLevel(getattr(logging, CONFIG.log_level.upper()))
-
-    formatter = logging.Formatter(
-        "%(asctime)s | %(levelname)-8s | %(message)s"
-    )
-
-    console = logging.StreamHandler()
-    console.setFormatter(formatter)
-
-    logfile = logging.FileHandler(
-        LOG_FOLDER / "application.log",
-        encoding="utf-8"
-    )
-    logfile.setFormatter(formatter)
-
-    LOGGER.addHandler(console)
-    LOGGER.addHandler(logfile)
-
-    LOGGER.propagate = False
-
-def info(message: str) -> None:
-    LOGGER.info(message)
-
-def warning(message: str) -> None:
-    LOGGER.warning(message)
-
-def error(message: str) -> None:
-    LOGGER.error(message)
-
-def debug(message: str) -> None:
-    if CONFIG.debug:
-        LOGGER.debug(message)
+###############################################################################
+# Factory
+###############################################################################
+def get_logger(
+    name: str,
+) -> logging.Logger:
+    return logging.getLogger(name)
