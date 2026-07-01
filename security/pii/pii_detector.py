@@ -2,7 +2,7 @@
 ===============================================================================
 PII Detector
 
-Enterprise AI Security Framework
+Enterprise AI Gateway (EAIG)
 
 This detector combines:
 

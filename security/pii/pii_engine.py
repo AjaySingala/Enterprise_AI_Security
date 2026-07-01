@@ -1,6 +1,6 @@
 """
 ===============================================================================
-Enterprise AI Security Framework
+Enterprise AI Gateway (EAIG)
 
 File:
     engine.py

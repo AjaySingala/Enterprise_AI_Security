@@ -1,6 +1,6 @@
 """
 ===============================================================================
-Enterprise AI Security Framework
+Enterprise AI Gateway (EAIG)
 
 Demo 02
 
@@ -58,7 +58,7 @@ def print_header():
     console.print()
     console.print(
         Panel.fit(
-            "[bold cyan]Enterprise AI Security Framework[/bold cyan]\n"
+            "[bold cyan]Enterprise AI Gateway (EAIG)[/bold cyan]\n"
             "Feature 02 : PII Detection & Masking",
             border_style="cyan"
         )

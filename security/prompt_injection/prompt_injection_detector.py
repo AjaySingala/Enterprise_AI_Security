@@ -6,7 +6,7 @@ Fast, inexpensive checks that run BEFORE calling the LLM.
 
 Feature 01
 
-Enterprise AI Security Framework
+Enterprise AI Gateway (EAIG)
 
 Objective
 ---------

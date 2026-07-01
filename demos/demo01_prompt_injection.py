@@ -50,7 +50,7 @@ def print_header() -> None:
 
     console.print(
         Panel.fit(
-            "[bold cyan]Enterprise AI Security Framework[/bold cyan]\n"
+            "[bold cyan]Enterprise AI Gateway (EAIG)[/bold cyan]\n"
             "Feature 01 : Prompt Injection Detection",
             border_style="cyan",
         )

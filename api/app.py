@@ -1,6 +1,6 @@
 """
 ===============================================================================
-Enterprise AI Security Framework
+Enterprise AI Gateway (EAIG)
 
 app.py
 
@@ -33,7 +33,7 @@ Test POST security/sanitize request with:
 
 """
 ===============================================================================
-Enterprise AI Security Framework
+Enterprise AI Gateway (EAIG)
 
 FastAPI Application
 
@@ -53,7 +53,7 @@ from api.routers.health import router as health_router
 from api.routers.security import router as security_router
 
 app = FastAPI(
-    title="Enterprise AI Security Framework",
+    title="Enterprise AI Gateway (EAIG)",
     description="Enterprise AI Security Gateway",
     version="1.2.0",
 )

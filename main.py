@@ -1,5 +1,5 @@
 """
-Enterprise AI Security Framework
+Enterprise AI Gateway (EAIG)
 
 Feature 01
 Project Bootstrap
@@ -10,7 +10,7 @@ from common.console import title
 print("--> Entering main")
 
 title(
-    "Enterprise AI Security Framework\n"
+    "Enterprise AI Gateway (EAIG)\n"
     "Feature 01 - Prompt Injection Detection"
 )
 

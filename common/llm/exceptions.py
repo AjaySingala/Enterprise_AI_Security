@@ -1,7 +1,7 @@
 """
 ===============================================================================
 File        : exceptions.py
-Project     : Enterprise AI Security Framework
+Project     : Enterprise AI Gateway (EAIG)
 
 Description
 -----------

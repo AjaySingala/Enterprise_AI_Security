@@ -1,7 +1,7 @@
 """
 ===============================================================================
 File        : llm.py
-Project     : Enterprise AI Security Framework
+Project     : Enterprise AI Gateway (EAIG)
 Author      : ChatGPT
 
 Description
