@@ -29,8 +29,8 @@ Future versions may also use:
 
 from __future__ import annotations
 
-from security.confidential.patterns import PATTERNS
-from security.confidential.types import (
+from security.confidential.confidential_patterns import PATTERNS
+from security.confidential.confidential_types import (
     ConfidentialDetectionResult,
     ConfidentialEntity,
     ConfidentialType,

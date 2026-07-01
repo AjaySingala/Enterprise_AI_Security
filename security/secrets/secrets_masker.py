@@ -3,7 +3,7 @@
 Enterprise AI Security Framework
 
 Feature:
-    Confidential Data Detection
+    Secret Detection
 
 File:
     masker.py
@@ -16,9 +16,7 @@ Python:
 
 Description
 -----------
-Masks confidential information.
-
-Supported Modes
+Masks detected secrets using one of three modes.
 
 1. FULL
 2. PARTIAL
@@ -28,25 +26,28 @@ Supported Modes
 
 from __future__ import annotations
 
-from security.confidential.types import (
-    ConfidentialDetectionResult,
+from security.secrets.secrets_types import (
     MaskMode,
+    SecretDetectionResult,
 )
 
-class ConfidentialMasker:
+class SecretMasker:
     """
-    Masks confidential information.
+    Masks detected secrets.
     """
 
     ###########################################################################
     def mask(
         self,
         text: str,
-        detection_result: ConfidentialDetectionResult,
+        detection_result: SecretDetectionResult,
         mode: MaskMode = MaskMode.PLACEHOLDER,
     ) -> str:
-        print("--> Entering ConfidentialMasker.mask")
+        print("--> Entering SecretMasker.mask")
 
+        #
+        # Replace from right-to-left so indexes remain valid.
+        #
         entities = sorted(
             detection_result.entities,
             key=lambda x: x.start,
@@ -58,7 +59,7 @@ class ConfidentialMasker:
         for entity in entities:
             replacement = self._replacement(
                 entity.value,
-                entity.entity_type.value,
+                entity.secret_type.value,
                 mode,
             )
 
@@ -68,7 +69,7 @@ class ConfidentialMasker:
                 + masked_text[entity.end:]
             )
 
-        print("<-- Exiting ConfidentialMasker.mask")
+        print("<-- Exiting SecretMasker.mask")
 
         return masked_text
 
@@ -76,7 +77,7 @@ class ConfidentialMasker:
     def _replacement(
         self,
         value: str,
-        entity_name: str,
+        secret_name: str,
         mode: MaskMode,
     ) -> str:
         if mode == MaskMode.FULL:
@@ -85,7 +86,7 @@ class ConfidentialMasker:
         if mode == MaskMode.PARTIAL:
             return self._partial_mask(value)
 
-        return f"<{entity_name}>"
+        return f"<{secret_name}>"
 
     ###########################################################################
     @staticmethod
@@ -96,8 +97,8 @@ class ConfidentialMasker:
             return "*" * len(value)
 
         return (
-            value[:3]
-            + "*" * (len(value) - 6)
-            + value[-3:]
+            value[:4]
+            + "*" * (len(value) - 8)
+            + value[-4:]
         )
     

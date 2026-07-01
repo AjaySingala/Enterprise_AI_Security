@@ -1,6 +1,6 @@
-from security.secrets.detector import SecretDetector
-from security.secrets.masker import SecretMasker
-from security.secrets.types import MaskMode
+from security.secrets.secrets_detector import SecretDetector
+from security.secrets.secrets_masker import SecretMasker
+from security.secrets.secrets_types import MaskMode
 
 text = """
 OPENAI_API_KEY = "sk-abcdefghijklmnopqrstuvwxyz123456789012345678"

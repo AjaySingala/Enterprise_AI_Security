@@ -2,11 +2,11 @@
 ===============================================================================
 Enterprise AI Security Framework
 
-Feature:
-    Secret Detection
-
 File:
     engine.py
+
+Feature:
+    PII Detection
 
 Version:
     1.0.0
@@ -16,23 +16,26 @@ Python:
 
 Description
 -----------
-Enterprise Secret Detection Engine.
+Enterprise PII Engine.
 
 Pipeline
 
-Input
-   │
-   ▼
+Input Text
+    │
+    ▼
 Regex Detection
-   │
-   ▼
-Entropy Detection
-   │
-   ▼
-Risk Scoring
-   │
-   ▼
+    │
+    ▼
+Presidio Detection
+    │
+    ▼
+Merge Results
+    │
+    ▼
 Masking
+    │
+    ▼
+Return Final Result
 ===============================================================================
 """
 
@@ -40,45 +43,47 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from security.secrets.detector import SecretDetector
-from security.secrets.masker import SecretMasker
-from security.secrets.types import (
+from security.pii.pii_detector import PIIDetector
+from security.pii.pii_masker import PIIMasker
+from security.pii.pii_types import (
     MaskMode,
-    SecretDetectionResult,
+    PIIDetectionResult,
 )
 
 ###############################################################################
 # Engine Result
 ###############################################################################
 @dataclass(slots=True)
-class SecretEngineResult:
+class PIIEngineResult:
     original_text: str
     masked_text: str
-    detection_result: SecretDetectionResult
+    detection_result: PIIDetectionResult
+
 
 ###############################################################################
 # Engine
 ###############################################################################
-class SecretEngine:
+class PIIEngine:
     """
-    Enterprise Secret Detection Engine.
+    Enterprise PII Engine.
     """
+
     ###########################################################################
-    def __init__(self):
-        print("--> Entering SecretEngine.__init__")
+    def __init__(self) -> None:
+        print("--> Entering PIIEngine.__init__")
 
-        self.detector = SecretDetector()
-        self.masker = SecretMasker()
+        self.detector = PIIDetector()
+        self.masker = PIIMasker()
 
-        print("<-- Exiting SecretEngine.__init__")
+        print("<-- Exiting PIIEngine.__init__")
 
     ###########################################################################
     def process(
         self,
         text: str,
         mask_mode: MaskMode = MaskMode.PLACEHOLDER,
-    ) -> SecretEngineResult:
-        print("--> Entering SecretEngine.process")
+    ) -> PIIEngineResult:
+        print("--> Entering PIIEngine.process")
 
         detection = self.detector.detect(text)
         masked = self.masker.mask(
@@ -87,9 +92,9 @@ class SecretEngine:
             mask_mode,
         )
 
-        print("<-- Exiting SecretEngine.process")
+        print("<-- Exiting PIIEngine.process")
 
-        return SecretEngineResult(
+        return PIIEngineResult(
             original_text=text,
             masked_text=masked,
             detection_result=detection,

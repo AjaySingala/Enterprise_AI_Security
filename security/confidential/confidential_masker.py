@@ -2,11 +2,11 @@
 ===============================================================================
 Enterprise AI Security Framework
 
+Feature:
+    Confidential Data Detection
+
 File:
     masker.py
-
-Feature:
-    PII Detection
 
 Version:
     1.0.0
@@ -16,51 +16,37 @@ Python:
 
 Description
 -----------
-Masks detected PII using one of three modes:
+Masks confidential information.
+
+Supported Modes
 
 1. FULL
-    john.doe@gmail.com
-    ↓
-    *******************
-
 2. PARTIAL
-    john.doe@gmail.com
-    ↓
-    j***@gmail.com
-
 3. PLACEHOLDER
-    john.doe@gmail.com
-    ↓
-    <EMAIL>
 ===============================================================================
 """
 
 from __future__ import annotations
 
-from security.pii.types import (
+from security.confidential.confidential_types import (
+    ConfidentialDetectionResult,
     MaskMode,
-    PIIDetectionResult,
 )
 
-class PIIMasker:
+class ConfidentialMasker:
     """
-    Masks detected PII.
+    Masks confidential information.
     """
 
     ###########################################################################
     def mask(
         self,
         text: str,
-        detection_result: PIIDetectionResult,
+        detection_result: ConfidentialDetectionResult,
         mode: MaskMode = MaskMode.PLACEHOLDER,
     ) -> str:
-        print("--> Entering PIIMasker.mask")
+        print("--> Entering ConfidentialMasker.mask")
 
-        #
-        # Important:
-        # Replace entities from right-to-left.
-        # Otherwise indexes become invalid after replacements.
-        #
         entities = sorted(
             detection_result.entities,
             key=lambda x: x.start,
@@ -82,7 +68,7 @@ class PIIMasker:
                 + masked_text[entity.end:]
             )
 
-        print("<-- Exiting PIIMasker.mask")
+        print("<-- Exiting ConfidentialMasker.mask")
 
         return masked_text
 
@@ -99,9 +85,6 @@ class PIIMasker:
         if mode == MaskMode.PARTIAL:
             return self._partial_mask(value)
 
-        #
-        # Default
-        #
         return f"<{entity_name}>"
 
     ###########################################################################
@@ -109,12 +92,12 @@ class PIIMasker:
     def _partial_mask(
         value: str,
     ) -> str:
-        if len(value) <= 4:
+        if len(value) <= 6:
             return "*" * len(value)
 
         return (
-            value[:2]
-            + "*" * (len(value) - 4)
-            + value[-2:]
+            value[:3]
+            + "*" * (len(value) - 6)
+            + value[-3:]
         )
     

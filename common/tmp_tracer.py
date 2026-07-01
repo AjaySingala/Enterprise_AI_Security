@@ -5,7 +5,7 @@ Every function in this project should call
 trace_enter() and trace_exit().
 """
 
-from config import DEBUG
+from config.config import DEBUG
 
 def trace_enter(function_name: str):
     if DEBUG:

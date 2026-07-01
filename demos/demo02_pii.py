@@ -23,8 +23,8 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
-from security.pii.engine import PIIEngine
-from security.pii.types import MaskMode
+from security.pii.pii_engine import PIIEngine
+from security.pii.pii_types import MaskMode
 
 console = Console()
 

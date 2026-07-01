@@ -2,11 +2,11 @@
 ===============================================================================
 Enterprise AI Security Framework
 
-Feature:
-    Secret Detection
-
 File:
     masker.py
+
+Feature:
+    PII Detection
 
 Version:
     1.0.0
@@ -16,37 +16,50 @@ Python:
 
 Description
 -----------
-Masks detected secrets using one of three modes.
+Masks detected PII using one of three modes:
 
 1. FULL
+    john.doe@gmail.com
+    ↓
+    *******************
+
 2. PARTIAL
+    john.doe@gmail.com
+    ↓
+    j***@gmail.com
+
 3. PLACEHOLDER
+    john.doe@gmail.com
+    ↓
+    <EMAIL>
 ===============================================================================
 """
 
 from __future__ import annotations
 
-from security.secrets.types import (
+from security.pii.pii_types import (
     MaskMode,
-    SecretDetectionResult,
+    PIIDetectionResult,
 )
 
-class SecretMasker:
+class PIIMasker:
     """
-    Masks detected secrets.
+    Masks detected PII.
     """
 
     ###########################################################################
     def mask(
         self,
         text: str,
-        detection_result: SecretDetectionResult,
+        detection_result: PIIDetectionResult,
         mode: MaskMode = MaskMode.PLACEHOLDER,
     ) -> str:
-        print("--> Entering SecretMasker.mask")
+        print("--> Entering PIIMasker.mask")
 
         #
-        # Replace from right-to-left so indexes remain valid.
+        # Important:
+        # Replace entities from right-to-left.
+        # Otherwise indexes become invalid after replacements.
         #
         entities = sorted(
             detection_result.entities,
@@ -59,7 +72,7 @@ class SecretMasker:
         for entity in entities:
             replacement = self._replacement(
                 entity.value,
-                entity.secret_type.value,
+                entity.entity_type.value,
                 mode,
             )
 
@@ -69,7 +82,7 @@ class SecretMasker:
                 + masked_text[entity.end:]
             )
 
-        print("<-- Exiting SecretMasker.mask")
+        print("<-- Exiting PIIMasker.mask")
 
         return masked_text
 
@@ -77,7 +90,7 @@ class SecretMasker:
     def _replacement(
         self,
         value: str,
-        secret_name: str,
+        entity_name: str,
         mode: MaskMode,
     ) -> str:
         if mode == MaskMode.FULL:
@@ -86,19 +99,22 @@ class SecretMasker:
         if mode == MaskMode.PARTIAL:
             return self._partial_mask(value)
 
-        return f"<{secret_name}>"
+        #
+        # Default
+        #
+        return f"<{entity_name}>"
 
     ###########################################################################
     @staticmethod
     def _partial_mask(
         value: str,
     ) -> str:
-        if len(value) <= 6:
+        if len(value) <= 4:
             return "*" * len(value)
 
         return (
-            value[:4]
-            + "*" * (len(value) - 8)
-            + value[-4:]
+            value[:2]
+            + "*" * (len(value) - 4)
+            + value[-2:]
         )
     

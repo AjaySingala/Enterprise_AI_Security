@@ -1,4 +1,4 @@
-from security.secrets.detector import SecretDetector
+from security.secrets.secrets_detector import SecretDetector
 
 text = """
 OPENAI_API_KEY = "sk-abcdefghijklmnopqrstuvwxyz123456789012345678"

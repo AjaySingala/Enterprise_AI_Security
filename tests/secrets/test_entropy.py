@@ -1,4 +1,4 @@
-from security.secrets.entropy import EntropyDetector
+from security.secrets.secrets_entropy import EntropyDetector
 
 samples = [
     "password",

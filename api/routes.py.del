@@ -1,0 +1,51 @@
+"""
+===============================================================================
+Enterprise AI Security Framework
+
+routes.py
+
+Version:
+    1.0.0
+===============================================================================
+"""
+
+import uuid
+
+from fastapi import APIRouter, Depends
+
+from api.dependencies import get_pipeline
+from api.models import (
+    AnalyzeRequest,
+    AnalyzeResponse,
+)
+
+from security.pipeline.pipeline_engine import SecurityPipeline
+
+router = APIRouter()
+
+###############################################################################
+
+@router.get("/health")
+def health():
+    return {
+        "status": "UP",
+        "version": "1.0.0",
+    }
+
+###############################################################################
+@router.post(
+    "/analyze",
+    response_model=AnalyzeResponse,
+)
+def analyze(
+    request: AnalyzeRequest,
+    pipeline: SecurityPipeline = Depends(get_pipeline),
+):
+    result = pipeline.process(request.text)
+
+    return AnalyzeResponse(
+        request_id=str(uuid.uuid4()),
+        decision=result.decision.value,
+        sanitized_text=result.sanitized_text,
+        reasons=result.reasons,
+    )

@@ -1,4 +1,4 @@
-from security.pii.detector import PIIDetector
+from security.pii.pii_detector import PIIDetector
 
 text = """
 Employee

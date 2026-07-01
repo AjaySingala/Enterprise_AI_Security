@@ -22,7 +22,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from security.confidential.types import ConfidentialType
+from security.confidential.confidential_types import ConfidentialType
 
 def load_patterns() -> dict[ConfidentialType, list[str]]:
     print("--> Entering load_patterns")

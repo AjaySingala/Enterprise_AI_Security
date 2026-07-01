@@ -7,7 +7,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from config import CONFIG
+from config.config import CONFIG
 
 LOG_FOLDER = Path("logs")
 LOG_FOLDER.mkdir(exist_ok=True)

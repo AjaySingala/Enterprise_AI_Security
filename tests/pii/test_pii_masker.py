@@ -1,6 +1,6 @@
-from security.pii.detector import PIIDetector
-from security.pii.masker import PIIMasker
-from security.pii.types import MaskMode
+from security.pii.pii_detector import PIIDetector
+from security.pii.pii_masker import PIIMasker
+from security.pii.pii_types import MaskMode
 
 text = """
 Name      : Ajay Singala

@@ -2,3 +2,4 @@
 -r requirements-rag.txt
 -r requirements-agents.txt
 -r requirements-dev.txt
+-r requirements-api.txt

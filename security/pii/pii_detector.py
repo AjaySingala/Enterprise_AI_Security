@@ -33,8 +33,8 @@ import re
 
 from presidio_analyzer import AnalyzerEngine
 
-from security.pii.patterns import PATTERNS
-from security.pii.types import (
+from security.pii.pii_patterns import PATTERNS
+from security.pii.pii_types import (
     PIIDetectionResult,
     PIIEntity,
     PIIType,

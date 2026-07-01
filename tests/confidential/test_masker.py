@@ -1,6 +1,6 @@
-from security.confidential.detector import ConfidentialDetector
-from security.confidential.masker import ConfidentialMasker
-from security.confidential.types import MaskMode
+from security.confidential.confidential_detector import ConfidentialDetector
+from security.confidential.confidential_masker import ConfidentialMasker
+from security.confidential.confidential_types import MaskMode
 
 text = """
 Internal Strategy Document

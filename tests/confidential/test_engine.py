@@ -1,5 +1,5 @@
-from security.confidential.engine import ConfidentialEngine
-from security.confidential.types import MaskMode
+from security.confidential.confidential_engine import ConfidentialEngine
+from security.confidential.confidential_types import MaskMode
 
 text = """
 Internal Strategy Document

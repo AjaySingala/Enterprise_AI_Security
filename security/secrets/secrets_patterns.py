@@ -7,7 +7,7 @@ Version:
 ===============================================================================
 """
 
-from security.secrets.types import SecretType
+from security.secrets.secrets_types import SecretType
 
 PATTERNS = {
     ###########################################################################

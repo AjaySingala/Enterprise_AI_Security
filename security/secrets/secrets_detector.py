@@ -20,9 +20,9 @@ from __future__ import annotations
 
 import re
 
-from security.secrets.entropy import EntropyDetector
-from security.secrets.patterns import PATTERNS
-from security.secrets.types import (
+from security.secrets.secrets_entropy import EntropyDetector
+from security.secrets.secrets_patterns import PATTERNS
+from security.secrets.secrets_types import (
     SecretDetectionResult,
     SecretEntity,
     SecretType,

@@ -1,5 +1,5 @@
-from security.secrets.engine import SecretEngine
-from security.secrets.types import MaskMode
+from security.secrets.secrets_engine import SecretEngine
+from security.secrets.secrets_types import MaskMode
 
 text = """
 OPENAI_API_KEY = "sk-abcdefghijklmnopqrstuvwxyz123456789012345678"

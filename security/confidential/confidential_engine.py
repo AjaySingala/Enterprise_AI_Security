@@ -2,11 +2,11 @@
 ===============================================================================
 Enterprise AI Security Framework
 
+Feature:
+    Confidential Data Detection
+
 File:
     engine.py
-
-Feature:
-    PII Detection
 
 Version:
     1.0.0
@@ -16,26 +16,7 @@ Python:
 
 Description
 -----------
-Enterprise PII Engine.
-
-Pipeline
-
-Input Text
-    │
-    ▼
-Regex Detection
-    │
-    ▼
-Presidio Detection
-    │
-    ▼
-Merge Results
-    │
-    ▼
-Masking
-    │
-    ▼
-Return Final Result
+Enterprise Confidential Data Detection Engine.
 ===============================================================================
 """
 
@@ -43,58 +24,58 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from security.pii.detector import PIIDetector
-from security.pii.masker import PIIMasker
-from security.pii.types import (
+from security.confidential.confidential_detector import ConfidentialDetector
+from security.confidential.confidential_masker import ConfidentialMasker
+from security.confidential.confidential_types import (
+    ConfidentialDetectionResult,
     MaskMode,
-    PIIDetectionResult,
 )
 
 ###############################################################################
 # Engine Result
 ###############################################################################
 @dataclass(slots=True)
-class PIIEngineResult:
+class ConfidentialEngineResult:
     original_text: str
     masked_text: str
-    detection_result: PIIDetectionResult
-
+    detection_result: ConfidentialDetectionResult
 
 ###############################################################################
 # Engine
 ###############################################################################
-class PIIEngine:
+class ConfidentialEngine:
     """
-    Enterprise PII Engine.
+    Enterprise Confidential Data Detection Engine.
     """
 
     ###########################################################################
-    def __init__(self) -> None:
-        print("--> Entering PIIEngine.__init__")
+    def __init__(self):
+        print("--> Entering ConfidentialEngine.__init__")
 
-        self.detector = PIIDetector()
-        self.masker = PIIMasker()
+        self.detector = ConfidentialDetector()
+        self.masker = ConfidentialMasker()
 
-        print("<-- Exiting PIIEngine.__init__")
+        print("<-- Exiting ConfidentialEngine.__init__")
 
     ###########################################################################
     def process(
         self,
         text: str,
         mask_mode: MaskMode = MaskMode.PLACEHOLDER,
-    ) -> PIIEngineResult:
-        print("--> Entering PIIEngine.process")
+    ) -> ConfidentialEngineResult:
+        print("--> Entering ConfidentialEngine.process")
 
         detection = self.detector.detect(text)
+
         masked = self.masker.mask(
             text,
             detection,
             mask_mode,
         )
 
-        print("<-- Exiting PIIEngine.process")
+        print("<-- Exiting ConfidentialEngine.process")
 
-        return PIIEngineResult(
+        return ConfidentialEngineResult(
             original_text=text,
             masked_text=masked,
             detection_result=detection,

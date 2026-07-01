@@ -12,7 +12,7 @@ they can easily be extended.
 
 from __future__ import annotations
 
-from security.pii.types import PIIType
+from security.pii.pii_types import PIIType
 
 ###############################################################################
 # Enterprise Regex Rules

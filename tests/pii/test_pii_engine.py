@@ -1,5 +1,5 @@
-from security.pii.engine import PIIEngine
-from security.pii.types import MaskMode
+from security.pii.pii_engine import PIIEngine
+from security.pii.pii_types import MaskMode
 
 text = """
 Employee

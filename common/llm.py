@@ -34,7 +34,7 @@ import time
 
 from openai import OpenAI
 
-from config import settings
+from config.config import settings
 from common.llm_response import LLMResponse
 
 class LLM:

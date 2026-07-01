@@ -3,7 +3,7 @@
 Enterprise AI Security Framework
 
 Feature:
-    Confidential Data Detection
+    Secret Detection
 
 File:
     engine.py
@@ -16,7 +16,23 @@ Python:
 
 Description
 -----------
-Enterprise Confidential Data Detection Engine.
+Enterprise Secret Detection Engine.
+
+Pipeline
+
+Input
+   │
+   ▼
+Regex Detection
+   │
+   ▼
+Entropy Detection
+   │
+   ▼
+Risk Scoring
+   │
+   ▼
+Masking
 ===============================================================================
 """
 
@@ -24,58 +40,56 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from security.confidential.detector import ConfidentialDetector
-from security.confidential.masker import ConfidentialMasker
-from security.confidential.types import (
-    ConfidentialDetectionResult,
+from security.secrets.secrets_detector import SecretDetector
+from security.secrets.secrets_masker import SecretMasker
+from security.secrets.secrets_types import (
     MaskMode,
+    SecretDetectionResult,
 )
 
 ###############################################################################
 # Engine Result
 ###############################################################################
 @dataclass(slots=True)
-class ConfidentialEngineResult:
+class SecretEngineResult:
     original_text: str
     masked_text: str
-    detection_result: ConfidentialDetectionResult
+    detection_result: SecretDetectionResult
 
 ###############################################################################
 # Engine
 ###############################################################################
-class ConfidentialEngine:
+class SecretEngine:
     """
-    Enterprise Confidential Data Detection Engine.
+    Enterprise Secret Detection Engine.
     """
-
     ###########################################################################
     def __init__(self):
-        print("--> Entering ConfidentialEngine.__init__")
+        print("--> Entering SecretEngine.__init__")
 
-        self.detector = ConfidentialDetector()
-        self.masker = ConfidentialMasker()
+        self.detector = SecretDetector()
+        self.masker = SecretMasker()
 
-        print("<-- Exiting ConfidentialEngine.__init__")
+        print("<-- Exiting SecretEngine.__init__")
 
     ###########################################################################
     def process(
         self,
         text: str,
         mask_mode: MaskMode = MaskMode.PLACEHOLDER,
-    ) -> ConfidentialEngineResult:
-        print("--> Entering ConfidentialEngine.process")
+    ) -> SecretEngineResult:
+        print("--> Entering SecretEngine.process")
 
         detection = self.detector.detect(text)
-
         masked = self.masker.mask(
             text,
             detection,
             mask_mode,
         )
 
-        print("<-- Exiting ConfidentialEngine.process")
+        print("<-- Exiting SecretEngine.process")
 
-        return ConfidentialEngineResult(
+        return SecretEngineResult(
             original_text=text,
             masked_text=masked,
             detection_result=detection,

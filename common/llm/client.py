@@ -29,7 +29,7 @@ from typing import Any
 
 from openai import OpenAI
 
-import config
+import config.config as config
 
 from common.logger import logger
 from common.llm.exceptions import InvalidConfigurationError

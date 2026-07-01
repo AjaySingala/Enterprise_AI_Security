@@ -1,4 +1,4 @@
-from security.confidential.detector import ConfidentialDetector
+from security.confidential.confidential_detector import ConfidentialDetector
 
 text = """
 Internal Document
