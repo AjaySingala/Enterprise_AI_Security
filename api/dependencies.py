@@ -5,16 +5,14 @@ Enterprise AI Gateway (EAIG)
 dependencies.py
 
 Version:
-    1.0.0
+    1.1.0
 ===============================================================================
 """
 
-from security.pipeline.pipeline_engine import SecurityPipeline
+from common.services import services
 
-#
-# Singleton
-#
-_pipeline = SecurityPipeline()
+def get_pipeline():
+    return services.pipeline
 
-def get_pipeline() -> SecurityPipeline:
-    return _pipeline
+def get_metrics():
+    return services.metrics

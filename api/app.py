@@ -43,6 +43,7 @@ from api.middleware.request_logger import RequestLoggingMiddleware
 
 from api.routers.health import router as health_router
 from api.routers.security import router as security_router
+from api.routers.admin import router as admin_router
 
 app = FastAPI(
     title="Enterprise AI Gateway",
@@ -104,4 +105,10 @@ app.include_router(
 
 app.include_router(
     security_router,
+)
+
+# Call /api/v1/security/analyze a few times.
+# Then, navigate to http://127.0.0.1:8000/api/v1/admin/metrics to view metrics.
+app.include_router(
+    admin_router,
 )

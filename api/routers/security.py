@@ -10,6 +10,7 @@ Version:
 """
 
 import uuid
+import time
 
 from fastapi import APIRouter, Depends
 
@@ -20,6 +21,11 @@ from api.models import (
 )
 
 from security.pipeline.pipeline_engine import SecurityPipeline
+
+from api.dependencies import (
+    get_metrics,
+    get_pipeline,
+)
 
 router = APIRouter(
     prefix="/api/v1/security",
@@ -32,9 +38,20 @@ router = APIRouter(
 )
 def analyze(
     request: AnalyzeRequest,
-    pipeline: SecurityPipeline = Depends(get_pipeline),
+    pipeline = Depends(get_pipeline),
+    metrics = Depends(get_metrics),
 ):
+    start = time.perf_counter()
     result = pipeline.process(request.text)
+
+    elapsed_ms = (
+        time.perf_counter() - start
+    ) * 1000
+
+    metrics.record(
+        result.decision.value,
+        elapsed_ms,
+    )
 
     return AnalyzeResponse(
         request_id=str(uuid.uuid4()),
