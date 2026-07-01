@@ -12,7 +12,7 @@ Version:
 from fastapi import APIRouter
 
 router = APIRouter(
-    prefix="/health",
+    prefix="/api/v1/health",
     tags=["Health"],
 )
 

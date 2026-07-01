@@ -22,7 +22,7 @@ from api.models import (
 from security.pipeline.pipeline_engine import SecurityPipeline
 
 router = APIRouter(
-    prefix="/security",
+    prefix="/api/v1/security",
     tags=["Security"],
 )
 
