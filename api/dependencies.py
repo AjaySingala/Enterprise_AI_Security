@@ -16,3 +16,6 @@ def get_pipeline():
 
 def get_metrics():
     return services.metrics
+
+def get_audit():
+    return services.audit

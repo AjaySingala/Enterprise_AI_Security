@@ -15,6 +15,7 @@ Python:
 from __future__ import annotations
 
 from common.metrics import MetricsService
+from common.audit import AuditService
 
 from security.pipeline.pipeline_engine import SecurityPipeline
 
@@ -30,6 +31,7 @@ class ServiceRegistry:
     def __init__(self):
         self._pipeline = SecurityPipeline()
         self._metrics = MetricsService()
+        self._audit = AuditService()
 
     ###########################################################################
     @property
@@ -40,6 +42,11 @@ class ServiceRegistry:
     @property
     def metrics(self) -> MetricsService:
         return self._metrics
+
+    @property
+    def audit(self) -> AuditService:
+
+        return self._audit
 
 ###############################################################################
 # Singleton

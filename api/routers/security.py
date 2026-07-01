@@ -25,7 +25,13 @@ from security.pipeline.pipeline_engine import SecurityPipeline
 from api.dependencies import (
     get_metrics,
     get_pipeline,
+    get_audit,
 )
+
+from common.audit import AuditRecord
+from datetime import datetime
+import time
+import uuid
 
 router = APIRouter(
     prefix="/api/v1/security",
@@ -40,6 +46,7 @@ def analyze(
     request: AnalyzeRequest,
     pipeline = Depends(get_pipeline),
     metrics = Depends(get_metrics),
+    audit = Depends(get_audit),
 ):
     start = time.perf_counter()
     result = pipeline.process(request.text)
@@ -52,6 +59,19 @@ def analyze(
         result.decision.value,
         elapsed_ms,
     )
+
+    audit.write(
+        AuditRecord(
+            timestamp=datetime.utcnow().isoformat(),
+            request_id=str(uuid.uuid4()),   # request.state.correlation_id
+            client_ip=request.client.host,
+            decision=result.decision.value,
+            pii_count=result.pii_result.detection_result.entity_count,
+            secret_count=result.secret_result.detection_result.entity_count,
+            confidential_count=result.confidential_result.detection_result.entity_count,
+            processing_time_ms=elapsed_ms,
+        )
+    )    
 
     return AnalyzeResponse(
         request_id=str(uuid.uuid4()),
@@ -71,3 +91,4 @@ def sanitize(
         "request_id": str(uuid.uuid4()),
         "sanitized_text": result.sanitized_text,
     }
+
