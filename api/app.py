@@ -39,6 +39,7 @@ from api.exceptions import global_exception_handler
 
 from api.middleware.correlation import CorrelationIdMiddleware
 from api.middleware.timing import TimingMiddleware
+from api.middleware.request_logger import RequestLoggingMiddleware
 
 from api.routers.health import router as health_router
 from api.routers.security import router as security_router
@@ -80,6 +81,10 @@ app.add_middleware(
 
 app.add_middleware(
     TimingMiddleware,
+)
+
+app.add_middleware(
+    RequestLoggingMiddleware,
 )
 
 #
