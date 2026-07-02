@@ -158,6 +158,18 @@ def main():
             f"{result.processing_time_ms:.2f} ms"
         )
 
+        print()
+        print("=" * 80)
+        print("Statistics")
+        print("=" * 80)
+        print(f"Model             : {result.model}")
+        print(f"Input Tokens      : {result.input_tokens}")
+        print(f"Output Tokens     : {result.output_tokens}")
+        print(f"Total Tokens      : {result.total_tokens}")
+        print(f"Processing Time   : {result.processing_time_ms:.2f} ms")
+        print(f"Request ID        : {result.request_id}")
+        print("=" * 80)
+
         print("-" * 80)
 
 ###############################################################################

@@ -96,6 +96,10 @@ class ChatResult:
     decision: str
     request_id: str
     processing_time_ms: float
+    model: str = ""
+    input_tokens: int = 0
+    output_tokens: int = 0
+    total_tokens: int = 0
     sanitized_prompt: str = ""
     reasons: list[str] = field(
         default_factory=list
