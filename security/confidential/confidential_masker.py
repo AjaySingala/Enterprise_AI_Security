@@ -28,6 +28,8 @@ Supported Modes
 
 from __future__ import annotations
 
+from config.config import settings
+
 from security.confidential.confidential_types import (
     ConfidentialDetectionResult,
     MaskMode,
@@ -45,7 +47,8 @@ class ConfidentialMasker:
         detection_result: ConfidentialDetectionResult,
         mode: MaskMode = MaskMode.PLACEHOLDER,
     ) -> str:
-        print("--> Entering ConfidentialMasker.mask")
+        if settings.debug:
+            print("--> Entering ConfidentialMasker.mask")
 
         entities = sorted(
             detection_result.entities,
@@ -68,7 +71,8 @@ class ConfidentialMasker:
                 + masked_text[entity.end:]
             )
 
-        print("<-- Exiting ConfidentialMasker.mask")
+        if settings.debug:
+            print("<-- Exiting ConfidentialMasker.mask")
 
         return masked_text
 

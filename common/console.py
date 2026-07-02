@@ -5,10 +5,13 @@ Rich console helper.
 from rich.console import Console
 from rich.panel import Panel
 
+from config.config import settings
+
 console = Console()
 
 def title(text: str) -> None:
-    print("--> Entering console.title")
+    if settings.debug:
+        print("--> Entering console.title")
 
     console.print(
         Panel.fit(
@@ -17,7 +20,8 @@ def title(text: str) -> None:
         )
     )
 
-    print("<-- Exiting console.title")
+    if settings.debug:
+        print("<-- Exiting console.title")
 
 def section(text: str) -> None:
     console.rule(f"[bold yellow]{text}")

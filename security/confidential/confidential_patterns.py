@@ -22,10 +22,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from config.config import settings
+
 from security.confidential.confidential_types import ConfidentialType
 
 def load_patterns() -> dict[ConfidentialType, list[str]]:
-    print("--> Entering load_patterns")
+    if settings.debug:
+        print("--> Entering load_patterns")
 
     dictionary_file = (
         Path(__file__).resolve()
@@ -50,7 +53,8 @@ def load_patterns() -> dict[ConfidentialType, list[str]]:
         except KeyError:
             print(f"Warning: Unknown confidential type '{key}'")
 
-    print("<-- Exiting load_patterns")
+    if settings.debug:
+        print("<-- Exiting load_patterns")
 
     return patterns
 

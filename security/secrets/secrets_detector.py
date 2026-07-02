@@ -19,6 +19,7 @@ Python:
 from __future__ import annotations
 
 import re
+from config.config import settings
 
 from security.secrets.secrets_entropy import EntropyDetector
 from security.secrets.secrets_patterns import PATTERNS
@@ -36,7 +37,8 @@ class SecretDetector:
 
     ###########################################################################
     def __init__(self):
-        print("--> Entering SecretDetector.__init__")
+        if settings.debug:
+            print("--> Entering SecretDetector.__init__")
 
         self.context_keywords = {
             "password",
@@ -53,14 +55,16 @@ class SecretDetector:
             "bearer",
         }
 
-        print("<-- Exiting SecretDetector.__init__")
+        if settings.debug:
+            print("<-- Exiting SecretDetector.__init__")
 
     ###########################################################################
     def detect(
         self,
         text: str,
     ) -> SecretDetectionResult:
-        print("--> Entering SecretDetector.detect")
+        if settings.debug:
+            print("--> Entering SecretDetector.detect")
 
         entities: list[SecretEntity] = []
 
@@ -118,7 +122,8 @@ class SecretDetector:
             100,
         )
 
-        print("<-- Exiting SecretDetector.detect")
+        if settings.debug:
+            print("<-- Exiting SecretDetector.detect")
 
         return SecretDetectionResult(
             entities=entities,

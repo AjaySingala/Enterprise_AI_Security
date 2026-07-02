@@ -24,6 +24,8 @@ This is the primary entry point used by applications.
 
 from __future__ import annotations
 
+from config.config import settings
+
 from security.pipeline.pipeline_policy import PolicyEngine
 from security.pipeline.pipeline_types import (
     PipelineDecision,
@@ -50,7 +52,8 @@ class SecurityPipeline:
 
     ###########################################################################
     def __init__(self):
-        print("--> Entering SecurityPipeline.__init__")
+        if settings.debug:
+            print("--> Entering SecurityPipeline.__init__")
 
         self.prompt_engine = PromptInjectionEngine()
         self.pii_engine = PIIEngine()
@@ -58,14 +61,16 @@ class SecurityPipeline:
         self.confidential_engine = ConfidentialEngine()
         self.policy = PolicyEngine()
 
-        print("<-- Exiting SecurityPipeline.__init__")
+        if settings.debug:
+            print("<-- Exiting SecurityPipeline.__init__")
 
     ###########################################################################
     def process(
         self,
         text: str,
     ) -> SecurityPipelineResult:
-        print("--> Entering SecurityPipeline.process")
+        if settings.debug:
+            print("--> Entering SecurityPipeline.process")
 
         reasons = []
 
@@ -146,7 +151,8 @@ class SecurityPipeline:
                 f"{confidential_result.detection_result.entity_count} confidential items detected."
             )
 
-        print("<-- Exiting SecurityPipeline.process")
+        if settings.debug:
+            print("<-- Exiting SecurityPipeline.process")
 
         return SecurityPipelineResult(
             original_text=text,

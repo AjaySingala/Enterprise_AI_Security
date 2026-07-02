@@ -23,6 +23,7 @@ Enterprise Confidential Data Detection Engine.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from config.config import settings
 
 from security.confidential.confidential_detector import ConfidentialDetector
 from security.confidential.confidential_masker import ConfidentialMasker
@@ -50,12 +51,14 @@ class ConfidentialEngine:
 
     ###########################################################################
     def __init__(self):
-        print("--> Entering ConfidentialEngine.__init__")
+        if settings.debug:
+            print("--> Entering ConfidentialEngine.__init__")
 
         self.detector = ConfidentialDetector()
         self.masker = ConfidentialMasker()
 
-        print("<-- Exiting ConfidentialEngine.__init__")
+        if settings.debug:
+            print("<-- Exiting ConfidentialEngine.__init__")
 
     ###########################################################################
     def process(
@@ -63,7 +66,8 @@ class ConfidentialEngine:
         text: str,
         mask_mode: MaskMode = MaskMode.PLACEHOLDER,
     ) -> ConfidentialEngineResult:
-        print("--> Entering ConfidentialEngine.process")
+        if settings.debug:
+            print("--> Entering ConfidentialEngine.process")
 
         detection = self.detector.detect(text)
 
@@ -73,7 +77,8 @@ class ConfidentialEngine:
             mask_mode,
         )
 
-        print("<-- Exiting ConfidentialEngine.process")
+        if settings.debug:
+            print("<-- Exiting ConfidentialEngine.process")
 
         return ConfidentialEngineResult(
             original_text=text,

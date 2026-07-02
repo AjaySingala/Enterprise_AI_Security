@@ -32,6 +32,7 @@ from __future__ import annotations
 import re
 
 from presidio_analyzer import AnalyzerEngine
+from config.config import settings
 
 from security.pii.pii_patterns import PATTERNS
 from security.pii.pii_types import (
@@ -48,7 +49,8 @@ class PIIDetector:
 
     ###########################################################################
     def __init__(self) -> None:
-        print("--> Entering PIIDetector.__init__")
+        if settings.debug:
+            print("--> Entering PIIDetector.__init__")
 
         # The first time this line executes, it takes a lot of time.
         # Presidio loads:
@@ -62,14 +64,16 @@ class PIIDetector:
         # initialize resources depending on your environment.
         self.analyzer = AnalyzerEngine()
 
-        print("<-- Exiting PIIDetector.__init__")
+        if settings.debug:
+            print("<-- Exiting PIIDetector.__init__")
 
     ###########################################################################
     def detect(
         self,
         text: str,
     ) -> PIIDetectionResult:
-        print("--> Entering PIIDetector.detect")
+        if settings.debug:
+            print("--> Entering PIIDetector.detect")
 
         entities: list[PIIEntity] = []
 
@@ -157,7 +161,8 @@ class PIIDetector:
         else:
             risk = RiskLevel.HIGH
 
-        print("<-- Exiting PIIDetector.detect")
+        if settings.debug:
+            print("<-- Exiting PIIDetector.detect")
 
         return PIIDetectionResult(
             entities=entities,

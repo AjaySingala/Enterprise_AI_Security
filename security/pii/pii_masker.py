@@ -36,6 +36,7 @@ Masks detected PII using one of three modes:
 """
 
 from __future__ import annotations
+from config.config import settings
 
 from security.pii.pii_types import (
     MaskMode,
@@ -54,7 +55,8 @@ class PIIMasker:
         detection_result: PIIDetectionResult,
         mode: MaskMode = MaskMode.PLACEHOLDER,
     ) -> str:
-        print("--> Entering PIIMasker.mask")
+        if settings.debug:
+            print("--> Entering PIIMasker.mask")
 
         #
         # Important:
@@ -82,7 +84,8 @@ class PIIMasker:
                 + masked_text[entity.end:]
             )
 
-        print("<-- Exiting PIIMasker.mask")
+        if settings.debug:
+            print("<-- Exiting PIIMasker.mask")
 
         return masked_text
 

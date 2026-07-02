@@ -42,6 +42,7 @@ Return Final Result
 from __future__ import annotations
 
 from dataclasses import dataclass
+from config.config import settings
 
 from security.pii.pii_detector import PIIDetector
 from security.pii.pii_masker import PIIMasker
@@ -70,12 +71,14 @@ class PIIEngine:
 
     ###########################################################################
     def __init__(self) -> None:
-        print("--> Entering PIIEngine.__init__")
+        if settings.debug:
+            print("--> Entering PIIEngine.__init__")
 
         self.detector = PIIDetector()
         self.masker = PIIMasker()
 
-        print("<-- Exiting PIIEngine.__init__")
+        if settings.debug:
+            print("<-- Exiting PIIEngine.__init__")
 
     ###########################################################################
     def process(
@@ -83,7 +86,8 @@ class PIIEngine:
         text: str,
         mask_mode: MaskMode = MaskMode.PLACEHOLDER,
     ) -> PIIEngineResult:
-        print("--> Entering PIIEngine.process")
+        if settings.debug:
+            print("--> Entering PIIEngine.process")
 
         detection = self.detector.detect(text)
         masked = self.masker.mask(
@@ -92,7 +96,8 @@ class PIIEngine:
             mask_mode,
         )
 
-        print("<-- Exiting PIIEngine.process")
+        if settings.debug:
+            print("<-- Exiting PIIEngine.process")
 
         return PIIEngineResult(
             original_text=text,

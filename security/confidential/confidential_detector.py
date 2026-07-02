@@ -28,6 +28,7 @@ Future versions may also use:
 """
 
 from __future__ import annotations
+from config.config import settings
 
 from security.confidential.confidential_patterns import PATTERNS
 from security.confidential.confidential_types import (
@@ -43,15 +44,17 @@ class ConfidentialDetector:
     """
     ###########################################################################
     def __init__(self) -> None:
-        print("--> Entering ConfidentialDetector.__init__")
-        print("<-- Exiting ConfidentialDetector.__init__")
+        if settings.debug:
+            print("--> Entering ConfidentialDetector.__init__")
+            print("<-- Exiting ConfidentialDetector.__init__")
 
     ###########################################################################
     def detect(
         self,
         text: str,
     ) -> ConfidentialDetectionResult:
-        print("--> Entering ConfidentialDetector.detect")
+        if settings.debug:
+            print("--> Entering ConfidentialDetector.detect")
 
         entities: list[ConfidentialEntity] = []
         text_lower = text.lower()
@@ -109,7 +112,8 @@ class ConfidentialDetector:
             100,
         )
 
-        print("<-- Exiting ConfidentialDetector.detect")
+        if settings.debug:
+            print("<-- Exiting ConfidentialDetector.detect")
 
         return ConfidentialDetectionResult(
             entities=entities,

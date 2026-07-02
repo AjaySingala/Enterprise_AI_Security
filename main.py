@@ -6,8 +6,10 @@ Project Bootstrap
 """
 
 from common.console import title
+from config.config import settings
 
-print("--> Entering main")
+if settings.debug:
+    print("--> Entering main")
 
 title(
     "Enterprise AI Gateway (EAIG)\n"
@@ -18,4 +20,5 @@ print()
 print("Framework initialized successfully.")
 print()
 print("Next step: Prompt Injection Detector")
-print("<-- Exiting main")
+if settings.debug:
+    print("<-- Exiting main")

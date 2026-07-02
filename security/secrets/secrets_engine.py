@@ -39,6 +39,7 @@ Masking
 from __future__ import annotations
 
 from dataclasses import dataclass
+from config.config import settings
 
 from security.secrets.secrets_detector import SecretDetector
 from security.secrets.secrets_masker import SecretMasker
@@ -65,12 +66,14 @@ class SecretEngine:
     """
     ###########################################################################
     def __init__(self):
-        print("--> Entering SecretEngine.__init__")
+        if settings.debug:
+            print("--> Entering SecretEngine.__init__")
 
         self.detector = SecretDetector()
         self.masker = SecretMasker()
 
-        print("<-- Exiting SecretEngine.__init__")
+        if settings.debug:
+            print("<-- Exiting SecretEngine.__init__")
 
     ###########################################################################
     def process(
@@ -78,7 +81,8 @@ class SecretEngine:
         text: str,
         mask_mode: MaskMode = MaskMode.PLACEHOLDER,
     ) -> SecretEngineResult:
-        print("--> Entering SecretEngine.process")
+        if settings.debug:
+            print("--> Entering SecretEngine.process")
 
         detection = self.detector.detect(text)
         masked = self.masker.mask(
@@ -87,7 +91,8 @@ class SecretEngine:
             mask_mode,
         )
 
-        print("<-- Exiting SecretEngine.process")
+        if settings.debug:
+            print("<-- Exiting SecretEngine.process")
 
         return SecretEngineResult(
             original_text=text,

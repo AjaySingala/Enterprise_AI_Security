@@ -39,13 +39,15 @@ from common.llm_response import LLMResponse
 
 class LLM:
     def __init__(self) -> None:
-        print("--> Entering LLM.__init__")
+        if settings.debug:
+            print("--> Entering LLM.__init__")
 
         self.client = OpenAI(
             api_key=settings.api_key
         )
 
-        print("<-- Exiting LLM.__init__")
+        if settings.debug:
+            print("<-- Exiting LLM.__init__")
 
     ###########################################################################
     @staticmethod
@@ -77,7 +79,8 @@ class LLM:
         system_prompt: str,
         user_prompt: str,
     ) -> LLMResponse:
-        print("--> Entering LLM.generate")
+        if settings.debug:
+            print("--> Entering LLM.generate")
 
         start = time.perf_counter()
 
@@ -138,7 +141,8 @@ class LLM:
 
         text = self._extract_text(response)
 
-        print("<-- Exiting LLM.generate")
+        if settings.debug:
+            print("<-- Exiting LLM.generate")
 
         return LLMResponse(
             text=text,
@@ -157,7 +161,8 @@ class LLM:
         system_prompt: str,
         user_prompt: str,
     ) -> dict:
-        print("--> Entering LLM.generate_json")
+        if settings.debug:
+            print("--> Entering LLM.generate_json")
 
         response = self.generate(
             system_prompt,
@@ -178,9 +183,97 @@ class LLM:
 
         result = json.loads(cleaned)
 
-        print("<-- Exiting LLM.generate_json")
+        if settings.debug:
+            print("<-- Exiting LLM.generate_json")
 
         return result
+
+    ###########################################################################
+    def chat(
+        self,
+        messages: list[dict],
+    ) -> LLMResponse:
+        """
+        Multi-turn chat using the Responses API.
+        """
+        if settings.debug:
+            print("--> Entering LLM.chat")
+
+        start = time.perf_counter()
+
+        #
+        # Convert OpenAI Chat format
+        # into Responses API format.
+        #
+        input_messages = []
+        for message in messages:
+            input_messages.append(
+                {
+                    "role": message["role"],
+                    "content": [
+                        {
+                            "type": "input_text",
+                            "text": message["content"],
+                        }
+                    ],
+                }
+            )
+
+        response = self.client.responses.create(
+            model=settings.model,
+            input=input_messages,
+        )
+
+        elapsed = round(
+            time.perf_counter() - start,
+            3,
+        )
+
+        usage = getattr(
+            response,
+            "usage",
+            None,
+        )
+
+        input_tokens = getattr(
+            usage,
+            "input_tokens",
+            0,
+        )
+
+        output_tokens = getattr(
+            usage,
+            "output_tokens",
+            0,
+        )
+
+        total_tokens = getattr(
+            usage,
+            "total_tokens",
+            input_tokens + output_tokens,
+        )
+
+        request_id = getattr(
+            response,
+            "id",
+            "",
+        )
+
+        text = self._extract_text(response)
+
+        if settings.debug:
+            print("<-- Exiting LLM.chat")
+
+        return LLMResponse(
+            text=text,
+            model=settings.model,
+            request_id=request_id,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            total_tokens=total_tokens,
+            elapsed_time=elapsed,
+            raw_response=response,
+        )
 
 ###
 llm = LLM()

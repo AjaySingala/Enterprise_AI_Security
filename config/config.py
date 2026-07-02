@@ -14,9 +14,12 @@ import os
 from dataclasses import dataclass
 from dotenv import load_dotenv
 
-print("--> Entering: config.py")
-
 load_dotenv()
+
+DEBUG = (os.getenv("DEBUG","True").lower() == "true")
+
+if DEBUG:
+    print("--> Entering: config.py")
 
 class Settings:
     """
@@ -38,4 +41,5 @@ settings = Settings()
 
 # print(f"OPENAI_API_KEY: {os.getenv('OPENAI_API_KEY')}")
 
-print("<-- Exiting : config.py")
+if DEBUG:
+    print("<-- Exiting : config.py")

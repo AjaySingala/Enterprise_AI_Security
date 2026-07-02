@@ -25,6 +25,7 @@ Masks detected secrets using one of three modes.
 """
 
 from __future__ import annotations
+from config.config import settings
 
 from security.secrets.secrets_types import (
     MaskMode,
@@ -43,7 +44,8 @@ class SecretMasker:
         detection_result: SecretDetectionResult,
         mode: MaskMode = MaskMode.PLACEHOLDER,
     ) -> str:
-        print("--> Entering SecretMasker.mask")
+        if settings.debug:
+            print("--> Entering SecretMasker.mask")
 
         #
         # Replace from right-to-left so indexes remain valid.
@@ -69,7 +71,8 @@ class SecretMasker:
                 + masked_text[entity.end:]
             )
 
-        print("<-- Exiting SecretMasker.mask")
+        if settings.debug:
+            print("<-- Exiting SecretMasker.mask")
 
         return masked_text
 

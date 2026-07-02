@@ -58,6 +58,7 @@ It doesn't match any regex, but it's suspicious because it has the characteristi
 from __future__ import annotations
 
 import math
+from config.config import settings
 
 class EntropyDetector:
     """
@@ -68,7 +69,8 @@ class EntropyDetector:
     def calculate(
         text: str,
     ) -> float:
-        print("--> Entering EntropyDetector.calculate")
+        if settings.debug:
+            print("--> Entering EntropyDetector.calculate")
 
         if not text:
             return 0.0
@@ -85,7 +87,8 @@ class EntropyDetector:
             probability = count / length
             entropy -= probability * math.log2(probability)
 
-        print("<-- Exiting EntropyDetector.calculate")
+        if settings.debug:
+            print("<-- Exiting EntropyDetector.calculate")
 
         return entropy
 
@@ -96,21 +99,25 @@ class EntropyDetector:
         threshold: float = 4.0,
         min_length: int = 20,
     ) -> bool:
-        print("--> Entering EntropyDetector.is_high_entropy")
+        if settings.debug:
+            print("--> Entering EntropyDetector.is_high_entropy")
 
         #
         # Ignore short strings.
         #
         if len(text) < min_length:
-            print("<-- Exiting EntropyDetector.is_high_entropy")
+            if settings.debug:
+                print("<-- Exiting EntropyDetector.is_high_entropy")
             return False
 
         entropy = EntropyDetector.calculate(text)
 
-        print(f"Entropy : {entropy:.2f}")
+        if settings.debug:
+            print(f"Entropy : {entropy:.2f}")
 
         result = entropy >= threshold
 
-        print("<-- Exiting EntropyDetector.is_high_entropy")
+        if settings.debug:
+            print("<-- Exiting EntropyDetector.is_high_entropy")
 
         return result

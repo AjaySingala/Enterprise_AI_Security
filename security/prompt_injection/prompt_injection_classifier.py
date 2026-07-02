@@ -28,6 +28,7 @@ from dataclasses import dataclass
 
 from common.llm import llm
 from common.prompts import PROMPT_INJECTION_SYSTEM_PROMPT
+from config.config import settings
 
 @dataclass(slots=True)
 class ClassificationResult:
@@ -50,7 +51,8 @@ class PromptInjectionClassifier:
         self,
         prompt: str,
     ) -> ClassificationResult:
-        print("--> Entering PromptInjectionClassifier.classify")
+        if settings.debug:
+            print("--> Entering PromptInjectionClassifier.classify")
 
         try:
             result = llm.generate_json(
@@ -85,7 +87,8 @@ class PromptInjectionClassifier:
                 reason=str(ex),
             )
 
-        print("<-- Exiting PromptInjectionClassifier.classify")
+        if settings.debug:
+            print("<-- Exiting PromptInjectionClassifier.classify")
 
         return classification
     

@@ -39,6 +39,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 
+from config.config import settings
+
 from security.prompt_injection.prompt_injection_detector import (
     PromptInjectionDetector,
 )
@@ -78,7 +80,8 @@ class PromptInjectionEngine:
     Enterprise Prompt Injection Engine.
     """
     def __init__(self) -> None:
-        print("--> Entering PromptInjectionEngine.__init__")
+        if settings.debug:
+            print("--> Entering PromptInjectionEngine.__init__")
 
         self.detector = PromptInjectionDetector()
         self.classifier = PromptInjectionClassifier()
@@ -92,14 +95,16 @@ class PromptInjectionEngine:
         self.allow_threshold = 15
         self.review_threshold = 80
 
-        print("<-- Exiting PromptInjectionEngine.__init__")
+        if settings.debug:
+            print("<-- Exiting PromptInjectionEngine.__init__")
 
     ###########################################################################
     def analyze(
         self,
         prompt: str,
     ) -> EngineResult:
-        print("--> Entering PromptInjectionEngine.analyze")
+        if settings.debug:
+            print("--> Entering PromptInjectionEngine.analyze")
 
         detector_result = self.detector.analyze(prompt)
 
@@ -108,7 +113,8 @@ class PromptInjectionEngine:
         #
         if detector_result.score < self.allow_threshold:
             print("Prompt considered SAFE. LLM skipped.")
-            print("<-- Exiting PromptInjectionEngine.analyze")
+            if settings.debug:
+                print("<-- Exiting PromptInjectionEngine.analyze")
 
             return EngineResult(
                 decision=Decision.ALLOW,
@@ -137,7 +143,8 @@ class PromptInjectionEngine:
         else:
             decision = Decision.ALLOW
 
-        print("<-- Exiting PromptInjectionEngine.analyze")
+        if settings.debug:
+            print("<-- Exiting PromptInjectionEngine.analyze")
 
         return EngineResult(
             decision=decision,

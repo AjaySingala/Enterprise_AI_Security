@@ -48,6 +48,7 @@ ALLOW
 from __future__ import annotations
 
 from dataclasses import dataclass
+from config.config import settings
 
 from security.pipeline.pipeline_types import PipelineDecision
 
@@ -89,11 +90,13 @@ class PolicyEngine:
         self,
         policy: SecurityPolicy | None = None,
     ) -> None:
-        print("--> Entering PolicyEngine.__init__")
+        if settings.debug:
+            print("--> Entering PolicyEngine.__init__")
 
         self.policy = policy or SecurityPolicy()
 
-        print("<-- Exiting PolicyEngine.__init__")
+        if settings.debug:
+            print("<-- Exiting PolicyEngine.__init__")
 
     ###########################################################################
     def evaluate(
@@ -103,7 +106,8 @@ class PolicyEngine:
         secret_result,
         confidential_result,
     ) -> PipelineDecision:
-        print("--> Entering PolicyEngine.evaluate")
+        if settings.debug:
+            print("--> Entering PolicyEngine.evaluate")
 
         #
         # Prompt Injection
@@ -115,7 +119,8 @@ class PolicyEngine:
 
             print("Policy Decision : BLOCK (Prompt Injection)")
 
-            print("<-- Exiting PolicyEngine.evaluate")
+            if settings.debug:
+                print("<-- Exiting PolicyEngine.evaluate")
 
             return PipelineDecision.BLOCK
 
@@ -128,7 +133,8 @@ class PolicyEngine:
         ):
             print("Policy Decision : SANITIZE (PII)")
 
-            print("<-- Exiting PolicyEngine.evaluate")
+            if settings.debug:
+                print("<-- Exiting PolicyEngine.evaluate")
 
             return PipelineDecision.SANITIZE
 
@@ -138,7 +144,8 @@ class PolicyEngine:
         ):
             print("Policy Decision : SANITIZE (Secrets)")
 
-            print("<-- Exiting PolicyEngine.evaluate")
+            if settings.debug:
+                print("<-- Exiting PolicyEngine.evaluate")
 
             return PipelineDecision.SANITIZE
 
@@ -148,13 +155,15 @@ class PolicyEngine:
         ):
             print("Policy Decision : SANITIZE (Confidential)")
 
-            print("<-- Exiting PolicyEngine.evaluate")
+            if settings.debug:
+                print("<-- Exiting PolicyEngine.evaluate")
 
             return PipelineDecision.SANITIZE
 
         print("Policy Decision : ALLOW")
 
-        print("<-- Exiting PolicyEngine.evaluate")
+        if settings.debug:
+            print("<-- Exiting PolicyEngine.evaluate")
 
         return PipelineDecision.ALLOW
     
