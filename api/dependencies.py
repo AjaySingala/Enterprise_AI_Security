@@ -19,3 +19,6 @@ def get_metrics():
 
 def get_audit():
     return services.audit
+
+def get_llm():
+    return services.llm

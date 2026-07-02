@@ -34,9 +34,7 @@ from applications.secure_chat.chat_models import (
     Conversation,
 )
 
-from common.llm import LLM
-
-from security.pipeline.pipeline_engine import SecurityPipeline
+from common.services import services
 
 ###############################################################################
 # Chat Engine
@@ -48,8 +46,8 @@ class ChatEngine:
 
     ###########################################################################
     def __init__(self):
-        self.pipeline = SecurityPipeline()
-        self.llm = LLM()
+        self.pipeline = services.pipeline
+        self.llm = services.llm
         self.conversation = Conversation(
             conversation_id=str(uuid.uuid4())
         )
