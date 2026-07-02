@@ -63,6 +63,14 @@ class Conversation:
         default_factory=datetime.utcnow
     )
 
+    ###############################################################################
+    # Usage Statistics
+    ###############################################################################
+    input_tokens: int = 0
+    output_tokens: int = 0
+    total_tokens: int = 0
+    estimated_cost: float = 0.0
+
     ###########################################################################
     def add_message(
         self,
@@ -85,6 +93,23 @@ class Conversation:
         self.messages.clear()
         self.updated_at = datetime.utcnow()
 
+    ###########################################################################
+    def add_usage(
+        self,
+        input_tokens: int,
+        output_tokens: int,
+        estimated_cost: float,
+    ) -> None:
+        self.input_tokens += input_tokens
+        self.output_tokens += output_tokens
+        self.total_tokens += (
+            input_tokens +
+            output_tokens
+        )
+
+        self.estimated_cost += estimated_cost
+        self.updated_at = datetime.utcnow()
+        
 ###############################################################################
 # Chat Result
 ###############################################################################

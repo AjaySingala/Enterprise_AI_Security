@@ -36,6 +36,8 @@ from applications.secure_chat.chat_models import (
 
 from common.services import services
 
+from config.pricing import MODEL_PRICING
+
 ###############################################################################
 # Chat Engine
 ###############################################################################
@@ -124,9 +126,42 @@ class ChatEngine:
         llm_response = self.llm.chat(messages)
         response = llm_response.text
 
+        ###########################################################################
+        # Cost Calculation
+        ###########################################################################
+        pricing = MODEL_PRICING.get(
+            llm_response.model,
+            {
+                "input": 0.0,
+                "output": 0.0,
+            },
+        )
+
+        input_cost = (
+            llm_response.input_tokens
+            / 1_000_000
+        ) * pricing["input"]
+
+        output_cost = (
+            llm_response.output_tokens
+            / 1_000_000
+        ) * pricing["output"]
+
+        estimated_cost = (
+            input_cost +
+            output_cost
+        )
+
         self.conversation.add_message(
             ChatRole.ASSISTANT,
             response,
+        )
+
+        # Estimated Cost.
+        self.conversation.add_usage(
+            llm_response.input_tokens,
+            llm_response.output_tokens,
+            estimated_cost,
         )
 
         elapsed = (
@@ -234,16 +269,19 @@ class ChatEngine:
                 systems += 1
 
         return {
-            "conversation_id":
-                self.conversation.conversation_id,
-            "messages":
-                len(self.conversation.messages),
-            "user_messages":
-                users,
-            "assistant_messages":
-                assistants,
-            "system_messages":
-                systems,
+            "conversation_id": self.conversation.conversation_id,
+            "messages": len(self.conversation.messages),
+            "user_messages": users,
+            "assistant_messages": assistants,
+            "system_messages": systems,
+            "input_tokens": self.conversation.input_tokens,
+            "output_tokens":  self.conversation.output_tokens,
+            "total_tokens": self.conversation.total_tokens,
+            "estimated_cost_usd":
+                round(
+                    self.conversation.estimated_cost,
+                    6,
+                ),
         }
 
     ###########################################################################
