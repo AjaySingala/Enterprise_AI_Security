@@ -207,12 +207,18 @@ class LLM:
         #
         input_messages = []
         for message in messages:
+            role = message["role"]
+            if role == "assistant":
+                content_type = "output_text"
+            else:
+                content_type = "input_text"
+
             input_messages.append(
                 {
-                    "role": message["role"],
+                   "role": role,
                     "content": [
                         {
-                            "type": "input_text",
+                            "type": content_type,
                             "text": message["content"],
                         }
                     ],
