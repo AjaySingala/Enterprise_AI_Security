@@ -24,6 +24,9 @@ from __future__ import annotations
 
 import time
 import uuid
+import json
+from dataclasses import asdict
+from pathlib import Path
 
 from applications.secure_chat.chat_models import (
     ChatRole,
@@ -152,3 +155,103 @@ class ChatEngine:
         self,
     ) -> None:
         self.conversation.clear()
+
+    ###########################################################################
+    def save_conversation(
+        self,
+        filename: str,
+    ) -> None:
+        path = Path(filename)
+        conversation = {
+            "conversation_id": self.conversation.conversation_id,
+            "created_at": self.conversation.created_at.isoformat(),
+            "updated_at": self.conversation.updated_at.isoformat(),
+            "messages": [
+                {
+                    "role": message.role.value,
+                    "content": message.content,
+                    "timestamp": message.timestamp.isoformat(),
+                }
+                for message in self.conversation.messages
+            ],
+        }
+
+        with open(
+            path,
+            "w",
+            encoding="utf-8",
+        ) as fp:
+            json.dump(
+                conversation,
+                fp,
+                indent=4,
+            )
+
+    ###########################################################################
+    def load_conversation(
+        self,
+        filename: str,
+    ) -> None:
+        path = Path(filename)
+        with open(
+            path,
+            "r",
+            encoding="utf-8",
+        ) as fp:
+            data = json.load(fp)
+
+        self.conversation.messages.clear()
+
+        from datetime import datetime
+        from applications.secure_chat.chat_models import (
+            ChatMessage,
+            ChatRole,
+        )
+
+        for message in data["messages"]:
+            self.conversation.messages.append(
+                ChatMessage(
+                    role=ChatRole(message["role"]),
+                    content=message["content"],
+                    timestamp=datetime.fromisoformat(
+                        message["timestamp"]
+                    ),
+                )
+            )
+
+    ###########################################################################
+    def conversation_stats(
+        self,
+    ) -> dict:
+        users = 0
+        assistants = 0
+        systems = 0
+
+        for message in self.conversation.messages:
+            if message.role == ChatRole.USER:
+                users += 1
+            elif message.role == ChatRole.ASSISTANT:
+                assistants += 1
+            else:
+                systems += 1
+
+        return {
+            "conversation_id":
+                self.conversation.conversation_id,
+            "messages":
+                len(self.conversation.messages),
+            "user_messages":
+                users,
+            "assistant_messages":
+                assistants,
+            "system_messages":
+                systems,
+        }
+
+    ###########################################################################
+    def new_conversation(
+        self,
+    ) -> None:
+        self.conversation = Conversation(
+            conversation_id=str(uuid.uuid4())
+        )
