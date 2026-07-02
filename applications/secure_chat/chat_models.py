@@ -51,6 +51,7 @@ class ChatMessage:
 @dataclass(slots=True)
 class Conversation:
     conversation_id: str
+    title: str = "New Conversation"
     messages: list[ChatMessage] = field(
         default_factory=list
     )
@@ -84,6 +85,18 @@ class Conversation:
             )
         )
 
+        #
+        # Automatically generate a title from the first user message.
+        #
+        if (
+            role == ChatRole.USER
+            and self.title == "New Conversation"
+        ):
+            title = content.strip()
+            if len(title) > 60:
+                title = title[:57] + "..."
+            self.title = title
+           
         self.updated_at = datetime.utcnow()
 
     ###########################################################################

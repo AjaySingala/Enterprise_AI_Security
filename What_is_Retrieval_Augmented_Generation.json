@@ -1,0 +1,18 @@
+{
+    "conversation_id": "209895b9-5282-4ae3-a961-b504d69e1530",
+    "title": "What is Retrieval Augmented Generation",
+    "created_at": "2026-07-02T14:36:40.598740",
+    "updated_at": "2026-07-02T14:36:58.878249",
+    "messages": [
+        {
+            "role": "user",
+            "content": "What is Retrieval Augmented Generation",
+            "timestamp": "2026-07-02T14:36:53.266417"
+        },
+        {
+            "role": "assistant",
+            "content": "Retrieval-Augmented Generation (RAG) is a framework that combines information retrieval with natural language generation. It leverages external knowledge sources to improve the quality and relevance of generated text. Here\u2019s a brief overview of how it works:\n\n1. **Information Retrieval**:\n   - RAG first retrieves relevant documents or pieces of information from a large corpus or database based on a user query or input.\n   - This can involve techniques such as keyword matching, semantic search, or using vector embeddings.\n\n2. **Text Generation**:\n   - After retrieving relevant documents, the RAG model generates a response or text based on both the original query and the retrieved information.\n   - This is typically done using a language model that can synthesize information from multiple sources.\n\n3. **Integration**:\n   - The system integrates insights from the retrieved documents with the generative capabilities of a language model. This enhances the accuracy and specificity of the responses.\n\n### Benefits:\n- **Enhanced Accuracy**: By grounding responses in factual information from external sources, RAG reduces the risk of generating inaccurate or misleading content.\n- **Contextual Relevance**: The model can draw from a broader context and provide more nuanced answers.\n- **Dynamic Updates**: RAG systems can be updated easily by changing or expanding the knowledge base without retraining the entire generation model.\n\n### Applications:\n- Question answering systems\n- Chatbots with access to extensive databases\n- Information summarization tools\n\nIn summary, RAG systems enhance the capabilities of generative models by integrating them with robust retrieval mechanisms, improving the overall performance in generating contextually relevant and accurate text.",
+            "timestamp": "2026-07-02T14:36:58.878232"
+        }
+    ]
+}

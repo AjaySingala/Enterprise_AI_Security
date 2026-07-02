@@ -192,11 +192,12 @@ class ChatEngine:
     ###########################################################################
     def save_conversation(
         self,
-        filename: str,
+        filename: str | Path,
     ) -> None:
         path = Path(filename)
         conversation = {
             "conversation_id": self.conversation.conversation_id,
+            "title": self.conversation.title,
             "created_at": self.conversation.created_at.isoformat(),
             "updated_at": self.conversation.updated_at.isoformat(),
             "messages": [
@@ -235,6 +236,11 @@ class ChatEngine:
 
         self.conversation.messages.clear()
 
+        self.conversation.title = data.get(
+            "title",
+            "New Conversation",
+        )
+
         from datetime import datetime
         from applications.secure_chat.chat_models import (
             ChatMessage,
@@ -270,6 +276,7 @@ class ChatEngine:
 
         return {
             "conversation_id": self.conversation.conversation_id,
+            "title": self.conversation.title,
             "messages": len(self.conversation.messages),
             "user_messages": users,
             "assistant_messages": assistants,

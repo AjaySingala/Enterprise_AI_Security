@@ -39,6 +39,15 @@ from __future__ import annotations
 
 from applications.secure_chat.chat_engine import ChatEngine
 
+from common.filename import make_safe_filename
+from common.conversation_storage import (
+    get_conversation_filename,
+)
+from common.conversation_storage import (
+    choose_conversation,
+    get_conversation_filename,
+)
+
 ###############################################################################
 # Banner
 ###############################################################################
@@ -66,6 +75,7 @@ def print_banner():
 # Main
 ###############################################################################
 def main():
+    print("Loading...")
     print_banner()
 
     engine = ChatEngine()
@@ -110,37 +120,58 @@ def main():
 
         # Save.
         if command.startswith("/save") or command.startswith("save"):
-            parts = command.split()
-            filename = (
-                parts[1]
-                if len(parts) > 1
-                else "conversation.json"
-            )
+            parts = user_input.split(maxsplit=1)
+
+            #
+            # User supplied filename
+            #
+            if len(parts) > 1:
+                filename = parts[1]
+
+            #
+            # Automatic filename
+            #
+            else:
+                filename = get_conversation_filename(
+                    engine.conversation.title
+                )
 
             engine.save_conversation(
                 filename,
             )
 
             print()
-            print(f"Conversation saved to {filename}")
+            print(f"Conversation saved to")
+            print(filename)
+
             continue
 
         # Load.
         if command.startswith("/load") or command.startswith("load"):
-            parts = command.split()
-            filename = (
-                parts[1]
-                if len(parts) > 1
-                else "conversation.json"
-            )
+            parts = user_input.split(maxsplit=1)
 
-            engine.load_conversation(
-                filename,
-            )
+            #
+            # Explicit filename
+            #
+            if len(parts) > 1:
+                filename = parts[1]
+
+            #
+            # Interactive browser
+            #
+            else:
+                filename = choose_conversation()
+                if filename is None:
+                    continue
+
+            engine.load_conversation(filename)
 
             print()
-            print(f"Conversation loaded from {filename}")
+            print(f"Loaded conversation")
+            print(filename)
+
             continue
+
         # Stats.
         if command in ("stats", "/stats"):
             stats = engine.conversation_stats()
