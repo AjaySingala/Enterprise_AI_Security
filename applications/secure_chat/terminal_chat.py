@@ -69,14 +69,15 @@ def main():
     while True:
         print()
         user_input = input("You : ").strip()
-
         if not user_input:
             continue
+
+        command = user_input.strip().lower()
 
         #
         # Exit
         #
-        if user_input.lower() == "/exit":
+        if command in ("exit", "/exit", "quit", "/quit"):
             print()
             print("Goodbye.")
             break
@@ -84,14 +85,14 @@ def main():
         #
         # Help
         #
-        if user_input.lower() == "/help":
+        if command in ("help", "/help"):
             print_banner()
             continue
 
         #
         # Clear
         #
-        if user_input.lower() == "/clear":
+        if command in ("clear", "/clear"):
             engine.clear_history()
             print()
             print("Conversation cleared.")
@@ -100,7 +101,7 @@ def main():
         #
         # History
         #
-        if user_input.lower() == "/history":
+        if command in ("history", "/history"):
             print()
             print("=" * 80)
             print("Conversation History")
