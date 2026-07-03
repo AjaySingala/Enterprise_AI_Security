@@ -37,6 +37,7 @@ from applications.secure_chat.chat_models import (
 from common.services import services
 
 from config.pricing import MODEL_PRICING
+from collections.abc import Generator
 
 ###############################################################################
 # Chat Engine
@@ -180,6 +181,150 @@ class ChatEngine:
             decision=security_result.decision.value,
             request_id=str(uuid.uuid4()),
             processing_time_ms=elapsed,
+            reasons=security_result.reasons,
+        )
+    
+    ###########################################################################
+    def stream_chat(
+        self,
+        user_message: str,
+    ) -> Generator[str, None, ChatResult]:
+        """
+        Stream an assistant response.
+
+        Yields text chunks.
+
+        Returns ChatResult when complete.
+        """
+
+        start = time.perf_counter()
+
+        #
+        # Store user message
+        #
+        self.conversation.add_message(
+            ChatRole.USER,
+            user_message,
+        )
+
+        #
+        # Security Pipeline
+        #
+        security_result = self.pipeline.process(
+            user_message,
+        )
+
+        #
+        # Block?
+        #
+        if security_result.decision.value == "BLOCK":
+            elapsed = (
+                time.perf_counter()
+                - start
+            ) * 1000
+
+            return ChatResult(
+                success=False,
+                user_message=user_message,
+                assistant_message="",
+                decision="BLOCK",
+                request_id="",
+                processing_time_ms=elapsed,
+                reasons=security_result.reasons,
+            )
+
+        #
+        # Build messages
+        #
+        messages = []
+        for message in self.conversation.messages:
+            messages.append(
+                {
+                    "role": message.role.value,
+                    "content": message.content,
+                }
+            )
+
+        #
+        # Replace latest prompt with sanitized version
+        #
+        messages[-1]["content"] = (
+            security_result.sanitized_text
+        )
+
+        #
+        # Stream
+        #
+        generator = self.llm.stream_chat(
+            messages,
+        )
+
+        full_response = ""
+        try:
+            while True:
+                token = next(generator)
+                full_response += token
+                yield token
+        except StopIteration as result:
+            llm_response = result.value
+
+        #
+        # Save assistant message
+        #
+        self.conversation.add_message(
+            ChatRole.ASSISTANT,
+            full_response,
+        )
+
+        #
+        # Cost
+        #
+        pricing = MODEL_PRICING.get(
+            llm_response.model,
+            {
+                "input": 0.0,
+                "output": 0.0,
+            },
+        )
+
+        input_cost = (
+            llm_response.input_tokens
+            / 1_000_000
+        ) * pricing["input"]
+
+        output_cost = (
+            llm_response.output_tokens
+            / 1_000_000
+        ) * pricing["output"]
+
+        estimated_cost = (
+            input_cost +
+            output_cost
+        )
+
+        self.conversation.add_usage(
+            llm_response.input_tokens,
+            llm_response.output_tokens,
+            estimated_cost,
+        )
+
+        elapsed = (
+            time.perf_counter()
+            - start
+        ) * 1000
+
+        return ChatResult(
+            success=True,
+            user_message=user_message,
+            assistant_message=full_response,
+            decision=security_result.decision.value,
+            request_id=llm_response.request_id,
+            processing_time_ms=elapsed,
+            model=llm_response.model,
+            input_tokens=llm_response.input_tokens,
+            output_tokens=llm_response.output_tokens,
+            total_tokens=llm_response.total_tokens,
+            sanitized_prompt=security_result.sanitized_text,
             reasons=security_result.reasons,
         )
 

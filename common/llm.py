@@ -36,6 +36,7 @@ from openai import OpenAI
 
 from config.config import settings
 from common.llm_response import LLMResponse
+from collections.abc import Generator
 
 class LLM:
     def __init__(self) -> None:
@@ -279,6 +280,96 @@ class LLM:
             total_tokens=total_tokens,
             elapsed_time=elapsed,
             raw_response=response,
+        )
+    
+    ###########################################################################
+    def stream_chat(
+        self,
+        messages: list[dict],
+    ) -> Generator[str, None, LLMResponse]:
+        """
+        Stream a multi-turn conversation.
+
+        Yields:
+            Text chunks as they arrive.
+
+        Returns:
+            LLMResponse (via StopIteration.value)
+        """
+        if settings.debug:
+            print("--> Entering LLM.stream_chat")
+
+        start = time.perf_counter()
+
+        #
+        # Convert to Chat Completions format
+        #
+        stream = self.client.chat.completions.create(
+            model=settings.model,
+            messages=messages,
+            stream=True,
+            stream_options={
+                "include_usage": True,
+            },
+        )
+
+        full_text = ""
+        request_id = ""
+        input_tokens = 0
+        output_tokens = 0
+        total_tokens = 0
+
+        for chunk in stream:
+            #
+            # Request ID
+            #
+            if hasattr(chunk, "id"):
+                request_id = chunk.id
+
+            #
+            # Token
+            #
+            if (
+                chunk.choices
+                and
+                chunk.choices[0].delta.content
+            ):
+                token = chunk.choices[0].delta.content
+                full_text += token
+
+                yield token
+
+            #
+            # Usage (available only in final chunk if enabled)
+            #
+            usage = getattr(
+                chunk,
+                "usage",
+                None,
+            )
+
+            if usage:
+                input_tokens = usage.prompt_tokens
+                output_tokens = usage.completion_tokens
+                total_tokens = usage.total_tokens
+
+        elapsed = round(
+            time.perf_counter() - start,
+            3,
+        )
+
+        if settings.debug:
+            print("\n<-- Exiting LLM.stream_chat")
+
+        return LLMResponse(
+            text=full_text,
+            model=settings.model,
+            request_id=request_id,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            total_tokens=total_tokens,
+            elapsed_time=elapsed,
+            raw_response=None,
         )
 
 ###
