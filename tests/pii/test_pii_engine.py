@@ -1,3 +1,10 @@
+"""
+===============================================================================
+Run:
+python -m tests.pii.test_pii_engine
+===============================================================================
+"""
+
 from security.pii.pii_engine import PIIEngine
 from security.pii.pii_types import MaskMode
 

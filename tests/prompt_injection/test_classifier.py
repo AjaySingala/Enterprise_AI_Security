@@ -1,3 +1,10 @@
+"""
+===============================================================================
+Run:
+python -m tests.prompt_injection.test_classifier
+===============================================================================
+"""
+
 from security.prompt_injection.prompt_injection_classifier import (
     PromptInjectionClassifier,
 )

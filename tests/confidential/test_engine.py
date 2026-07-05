@@ -1,3 +1,10 @@
+"""
+===============================================================================
+Run:
+python -m tests.confidential.test_engine
+===============================================================================
+"""
+
 from security.confidential.confidential_engine import ConfidentialEngine
 from security.confidential.confidential_types import MaskMode
 

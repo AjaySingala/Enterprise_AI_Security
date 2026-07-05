@@ -38,6 +38,9 @@ My email is ajay.singala@company.com. Explain embeddings.
 from __future__ import annotations
 
 from applications.secure_chat.chat_engine import ChatEngine
+from applications.secure_chat.chat_models import (
+    StreamEventType,
+)
 
 from common.filename import make_safe_filename
 from common.conversation_storage import (
@@ -207,54 +210,80 @@ def main():
 
             continue
 
+        # #
+        # # Regular (non-stream) Chat
+        # #
+        # result = engine.chat(
+        #     user_input,
+        # )
+
         #
-        # Chat
+        # Start the stream
         #
-        result = engine.chat(
-            user_input,
-        )
+        chat_result = None
+
+        print()
+        print("Assistant")
+        print("---------")
+        print()
+
+        for event in engine.stream_chat(user_input):
+            if event.event == StreamEventType.START:
+                continue
+            elif event.event == StreamEventType.TOKEN:
+                print(
+                    event.data,
+                    end="",
+                    flush=True,
+                )
+            elif event.event == StreamEventType.COMPLETE:
+                chat_result = event.data
+
+        print()
+
+        if not chat_result.success:
+            print("Request blocked.")
+            if chat_result.reasons:
+                print()
+                for reason in chat_result.reasons:
+                    print(f"- {reason}")
+            continue
+
+        # print(chat_result.assistant_message)
+        # print()
 
         print()
         print("-" * 80)
         print("Decision")
         print("--------")
-        print(result.decision)
+        print(chat_result.decision)
 
-        if result.decision == "SANITIZE":
+        if chat_result.decision == "SANITIZE":
             print()
             print("Sanitized Prompt")
             print("----------------")
-            print(result.sanitized_prompt)
+            print(chat_result.sanitized_prompt)
             
-        if result.reasons:
+        if chat_result.reasons:
             print()
             print("Reasons")
             print("-------")
-            for reason in result.reasons:
+            for reason in chat_result.reasons:
                 print(f"- {reason}")
-
-        print()
-
-        print("Assistant")
-        print("---------")
-        print(result.assistant_message)
-        print()
-
-        print(
-            f"Processing Time : "
-            f"{result.processing_time_ms:.2f} ms"
-        )
 
         print()
         print("=" * 80)
         print("Statistics")
         print("=" * 80)
-        print(f"Model             : {result.model}")
-        print(f"Input Tokens      : {result.input_tokens}")
-        print(f"Output Tokens     : {result.output_tokens}")
-        print(f"Total Tokens      : {result.total_tokens}")
-        print(f"Processing Time   : {result.processing_time_ms:.2f} ms")
-        print(f"Request ID        : {result.request_id}")
+        # print(f"Model             : {chat_result}")
+        # print()
+        print(f"User              : {chat_result.user_message}")
+        print(f"Model             : {chat_result.assistant_message}")
+        print(f"Input Tokens      : {chat_result.input_tokens}")
+        print(f"Output Tokens     : {chat_result.output_tokens}")
+        print(f"Total Tokens      : {chat_result.total_tokens}")
+        print(f"Processing Time   : {chat_result.processing_time_ms:.2f} ms")
+        print(f"Request ID        : {chat_result.request_id}")
         print("=" * 80)
 
         print("-" * 80)

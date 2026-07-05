@@ -1,3 +1,10 @@
+"""
+===============================================================================
+Run:
+python -m tests.confidential.test_masker
+===============================================================================
+"""
+
 from security.confidential.confidential_detector import ConfidentialDetector
 from security.confidential.confidential_masker import ConfidentialMasker
 from security.confidential.confidential_types import MaskMode

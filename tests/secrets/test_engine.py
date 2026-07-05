@@ -1,3 +1,10 @@
+"""
+===============================================================================
+Run:
+python -m tests.secrets.test_engine
+===============================================================================
+"""
+
 from security.secrets.secrets_engine import SecretEngine
 from security.secrets.secrets_types import MaskMode
 

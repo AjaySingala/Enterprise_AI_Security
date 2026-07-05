@@ -32,6 +32,8 @@ from applications.secure_chat.chat_models import (
     ChatRole,
     ChatResult,
     Conversation,
+    StreamEvent,
+    StreamEventType,
 )
 
 from common.services import services
@@ -188,7 +190,7 @@ class ChatEngine:
     def stream_chat(
         self,
         user_message: str,
-    ) -> Generator[str, None, ChatResult]:
+    ) -> Generator[StreamEvent, None, None]:
         """
         Stream an assistant response.
 
@@ -223,15 +225,24 @@ class ChatEngine:
                 - start
             ) * 1000
 
-            return ChatResult(
-                success=False,
-                user_message=user_message,
-                assistant_message="",
-                decision="BLOCK",
-                request_id="",
-                processing_time_ms=elapsed,
-                reasons=security_result.reasons,
+            yield StreamEvent(
+                event=StreamEventType.COMPLETE,
+                data=ChatResult(
+                    success=False,
+                    user_message=user_message,
+                    assistant_message="",
+                    decision="BLOCK",
+                    request_id="",
+                    processing_time_ms=elapsed,
+                    reasons=security_result.reasons,
+                ),
             )
+
+            return
+
+        yield StreamEvent(
+            event=StreamEventType.START,
+        )
 
         #
         # Build messages
@@ -264,7 +275,11 @@ class ChatEngine:
             while True:
                 token = next(generator)
                 full_response += token
-                yield token
+                # yield token
+                yield StreamEvent(
+                    event=StreamEventType.TOKEN,
+                    data=token,
+                )
         except StopIteration as result:
             llm_response = result.value
 
@@ -313,7 +328,7 @@ class ChatEngine:
             - start
         ) * 1000
 
-        return ChatResult(
+        chat_result = ChatResult(
             success=True,
             user_message=user_message,
             assistant_message=full_response,
@@ -328,6 +343,12 @@ class ChatEngine:
             reasons=security_result.reasons,
         )
 
+        yield StreamEvent(
+            event=StreamEventType.COMPLETE,
+            data=chat_result,
+        )
+
+        return
     ###########################################################################
     def clear_history(
         self,

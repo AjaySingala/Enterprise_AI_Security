@@ -1,3 +1,10 @@
+"""
+===============================================================================
+Run:
+python -m tests.secure_chat.test_stream_chat_engine
+===============================================================================
+"""
+
 from applications.secure_chat.chat_engine import ChatEngine
 
 engine = ChatEngine()

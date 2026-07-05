@@ -1,3 +1,11 @@
+"""
+===============================================================================
+Run:
+python -m tests.confidential.test_detector
+===============================================================================
+"""
+
+
 from security.confidential.confidential_detector import ConfidentialDetector
 
 text = """

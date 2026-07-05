@@ -1,3 +1,10 @@
+"""
+===============================================================================
+Run:
+python -m tests.secrets.test_entropy
+===============================================================================
+"""
+
 from security.secrets.secrets_entropy import EntropyDetector
 
 samples = [

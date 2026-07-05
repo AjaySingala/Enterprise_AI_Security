@@ -1,3 +1,10 @@
+"""
+===============================================================================
+Run:
+python -m tests.prompt_injection.test_engine
+===============================================================================
+"""
+
 from security.prompt_injection.prompt_injection_engine import (
     PromptInjectionEngine,
 )

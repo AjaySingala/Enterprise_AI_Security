@@ -1,3 +1,10 @@
+"""
+===============================================================================
+Run:
+python -m tests.secrets.test_masker
+===============================================================================
+"""
+
 from security.secrets.secrets_detector import SecretDetector
 from security.secrets.secrets_masker import SecretMasker
 from security.secrets.secrets_types import MaskMode

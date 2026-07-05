@@ -1,3 +1,10 @@
+"""
+===============================================================================
+Run:
+python -m tests.secrets.test_detector
+===============================================================================
+"""
+
 from security.secrets.secrets_detector import SecretDetector
 
 text = """

@@ -142,3 +142,18 @@ class ChatResult:
     reasons: list[str] = field(
         default_factory=list
     )
+
+###############################################################################
+# Streaming
+###############################################################################
+class StreamEventType(str, Enum):
+    START = "start"
+    TOKEN = "token"
+    COMPLETE = "complete"
+    ERROR = "error"
+
+###############################################################################
+@dataclass(slots=True)
+class StreamEvent:
+    event: StreamEventType
+    data: object | None = None

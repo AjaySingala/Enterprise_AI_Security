@@ -1,3 +1,10 @@
+"""
+===============================================================================
+Run:
+python -m tests.prompt_injection.test_detector
+===============================================================================
+"""
+
 from security.prompt_injection.prompt_injection_detector import PromptInjectionDetector
 
 detector = PromptInjectionDetector()

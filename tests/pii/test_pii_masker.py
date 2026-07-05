@@ -1,3 +1,10 @@
+"""
+===============================================================================
+Run:
+python -m tests.pii.test_pii_masker
+===============================================================================
+"""
+
 from security.pii.pii_detector import PIIDetector
 from security.pii.pii_masker import PIIMasker
 from security.pii.pii_types import MaskMode
