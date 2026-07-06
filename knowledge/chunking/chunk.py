@@ -22,7 +22,7 @@ import uuid
 ###############################################################################
 # Chunk
 ###############################################################################
-@dataclass(slots=True)
+@dataclass(slots=True, frozen=True)
 class Chunk:
     document_id: str
     content: str

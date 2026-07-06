@@ -46,10 +46,9 @@ class EmbeddingEngine:
         )
 
         return Embedding(
-            chunk_id=chunk.chunk_id,
+            chunk=chunk,
             vector=item.embedding,
             model=self.model,
-            dimensions=len(item.embedding),
             input_tokens=(
                 usage.prompt_tokens
                 if usage
@@ -83,10 +82,9 @@ class EmbeddingEngine:
         for chunk, item in zip(chunks, response.data):
             embeddings.append(
                 Embedding(
-                    chunk_id=chunk.chunk_id,
+                    chunk=chunk,
                     vector=item.embedding,
                     model=self.model,
-                    dimensions=len(item.embedding),
                     input_tokens=(
                         usage.prompt_tokens
                         if usage

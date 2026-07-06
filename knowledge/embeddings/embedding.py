@@ -9,12 +9,17 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Sequence
 
-@dataclass(slots=True)
+from knowledge.chunking.chunk import Chunk
+
+@dataclass(slots=True, frozen=True)
 class Embedding:
+    """
+    Represents a vector embedding for a Chunk.
+    """
     #
     # Source
     #
-    chunk_id: str
+    chunk: Chunk
 
     #
     # Vector
@@ -25,9 +30,29 @@ class Embedding:
     # Metadata
     #
     model: str
-    dimensions: int
 
     #
     # Statistics
     #
     input_tokens: int = 0
+    elapsed_ms: float = 0.0
+
+    @property
+    def dimensions(self) -> int:
+        return len(self.vector)
+
+    @property
+    def chunk_id(self) -> str:
+        return self.chunk.chunk_id
+
+    @property
+    def document_id(self) -> str:
+        return self.chunk.document_id
+
+    @property
+    def chunk_index(self) -> int:
+        return self.chunk.chunk_index
+
+    @property
+    def content(self) -> str:
+        return self.chunk.content

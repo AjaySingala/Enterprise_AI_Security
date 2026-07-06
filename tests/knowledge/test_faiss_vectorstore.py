@@ -72,7 +72,7 @@ def main():
             f"Score: {result.score:.4f}"
         )
         print(
-            result.embedding.chunk_id
+            result.embedding.chunk.chunk_id
         )
         print()
 
