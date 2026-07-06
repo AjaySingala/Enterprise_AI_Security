@@ -37,26 +37,41 @@ from __future__ import annotations
 import logging
 import sys
 
+from config.config import settings
+from pathlib import Path
+
 ###############################################################################
 # Configure Logger
 ###############################################################################
-logging.basicConfig(
-    level=logging.INFO,
-    format=(
-        "%(asctime)s | "
-        "%(levelname)-8s | "
-        "%(name)s | "
-        "%(message)s"
-    ),
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-    ],
+logger = logging.getLogger()
+logger.setLevel(settings.log_level)
+
+formatter = logging.Formatter(
+    "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    "%Y-%m-%d %H:%M:%S",
 )
+
+logger.handlers.clear()
+
+if settings.log_to_console:
+    console = logging.StreamHandler(sys.stdout)
+    console.setFormatter(formatter)
+    logger.addHandler(console)
+
+if settings.log_to_file:
+    Path(settings.log_folder).mkdir(
+        exist_ok=True,
+    )
+    file = logging.FileHandler(
+        Path(settings.log_folder) / settings.log_filename,
+        encoding="utf-8",
+    )
+
+    file.setFormatter(formatter)
+    logger.addHandler(file)
 
 ###############################################################################
 # Factory
 ###############################################################################
-def get_logger(
-    name: str,
-) -> logging.Logger:
+def get_logger(name: str):
     return logging.getLogger(name)

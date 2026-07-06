@@ -43,3 +43,17 @@ python -m tests.secrets.test_engine
 python -m tests.confidential.test_detector
 python -m tests.confidential.test_masker
 python -m tests.confidential.test_engine
+
+# Feature 5: Secure Chat:
+python -m tests.secure_chat.test_stream_chat_engine
+python -m tests.llms.test_stream_chat
+
+# Feature 6: Knowledge Base:
+python -m tests.knowledge.test_text_loader
+python -m tests.knowledge.test_splitter
+python -m tests.knowledge.test_recursive_chunker
+
+# If there is an spaCy related error, uninstall and reinstall spaCy:
+pip uninstall spacy
+pip install --no-cache-dir spacy==3.8.13
+

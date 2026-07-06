@@ -2,12 +2,14 @@
 ===============================================================================
 Test : Streaming Chat
 
+Testing the LLM wrapper's streaming capability
+
 Run:
 python -m tests.llms.test_stream_chat
 ===============================================================================
 """
 
-from common.llm import llm
+from common.services import services
 
 def main():
     messages = [
@@ -23,7 +25,7 @@ def main():
     print("=" * 80)
     print()
 
-    generator = llm.stream_chat(messages)
+    generator = services.llm.stream_chat(messages)
     try:
         while True:
             token = next(generator)

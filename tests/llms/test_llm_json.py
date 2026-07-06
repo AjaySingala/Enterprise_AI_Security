@@ -5,10 +5,9 @@ python -m tests.llms.test_llm_json
 ===============================================================================
 """
 
-from common.llm import llm
+from common.services import services
 
-response = llm.generate_json(
-
+response = services.llm.generate_json(
     system_prompt="""
 Return ONLY JSON.
 {
@@ -16,7 +15,6 @@ Return ONLY JSON.
     "version":"3.13"
 }
 """,
-
     user_prompt="Return the JSON."
 )
 

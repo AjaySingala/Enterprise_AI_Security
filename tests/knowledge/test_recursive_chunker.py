@@ -4,32 +4,26 @@ Run:
 python -m tests.knowledge.test_recursive_chunker
 ===============================================================================
 """
-print("Module loading...")
 from pathlib import Path
 
 from knowledge.chunking.recursive_chunker import RecursiveChunker
 from knowledge.loaders.text_loader import TextLoader
 
 def main():
-    print("Starting...")
     loader = TextLoader()
 
-    print("Loading document...")
     document = loader.load(
         Path("data/text/rag_intro.txt")
     )
-    print("Document loaded...")
 
     chunker = RecursiveChunker(
         chunk_size=200,
         chunk_overlap=40,
     )
-    print("Chunker created...")
 
     chunks = chunker.chunk(
         document
     )
-    print("Chunking complete...")
 
     print()
 

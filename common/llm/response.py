@@ -32,8 +32,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Optional
 
-from common.tracer import trace_enter
-from common.tracer import trace_exit
+# from common.tracer import trace_enter
+# from common.tracer import trace_exit
+from common.tracing.trace_decorator import trace
 
 @dataclass(slots=True)
 class LLMResponse:
@@ -56,40 +57,40 @@ class LLMResponse:
     ###########################################################################
     # Helper Methods
     ###########################################################################
-
+    @trace
     def is_success(self) -> bool:
         """
         Returns True if the request completed successfully.
         """
-        trace_enter("LLMResponse.is_success")
+        # trace_enter("LLMResponse.is_success")
 
         result = self.success
 
-        trace_exit("LLMResponse.is_success")
+        # trace_exit("LLMResponse.is_success")
 
         return result
 
     ###########################################################################
-
+    @trace
     def has_error(self) -> bool:
         """
         Returns True if an error occurred.
         """
-        trace_enter("LLMResponse.has_error")
+        # trace_enter("LLMResponse.has_error")
 
         result = not self.success
 
-        trace_exit("LLMResponse.has_error")
+        # trace_exit("LLMResponse.has_error")
 
         return result
 
     ###########################################################################
-
+    @trace
     def print_summary(self) -> None:
         """
         Prints a concise summary of the response.
         """
-        trace_enter("LLMResponse.print_summary")
+        # trace_enter("LLMResponse.print_summary")
 
         print("\n" + "=" * 80)
         print("LLM RESPONSE SUMMARY")
@@ -115,30 +116,30 @@ class LLMResponse:
 
         print("=" * 80)
 
-        trace_exit("LLMResponse.print_summary")
+        # trace_exit("LLMResponse.print_summary")
 
     ###########################################################################
-
+    @trace
     def print_answer(self) -> None:
         """
         Prints only the generated text.
         """
-        trace_enter("LLMResponse.print_answer")
+        # trace_enter("LLMResponse.print_answer")
 
         print("\nGenerated Response")
         print("-" * 80)
         print(self.text)
         print("-" * 80)
 
-        trace_exit("LLMResponse.print_answer")
+        # trace_exit("LLMResponse.print_answer")
 
     ###########################################################################
-
+    @trace
     def to_dict(self) -> dict:
         """
         Converts the object into a dictionary.
         """
-        trace_enter("LLMResponse.to_dict")
+        # trace_enter("LLMResponse.to_dict")
 
         data = {
             "success": self.success,
@@ -154,30 +155,30 @@ class LLMResponse:
             "error_message": self.error_message,
         }
 
-        trace_exit("LLMResponse.to_dict")
+        # trace_exit("LLMResponse.to_dict")
 
         return data
 
     ###########################################################################
-
+    @trace
     @classmethod
     def failure(cls, message: str) -> "LLMResponse":
         """
         Creates a standard failure response.
         """
-        trace_enter("LLMResponse.failure")
+        # trace_enter("LLMResponse.failure")
 
         response = cls(
             success=False,
             error_message=message
         )
 
-        trace_exit("LLMResponse.failure")
+        # trace_exit("LLMResponse.failure")
 
         return response
 
     ###########################################################################
-
+    @trace
     @classmethod
     def success_response(
         cls,
@@ -187,7 +188,7 @@ class LLMResponse:
         """
         Creates a minimal success response.
         """
-        trace_enter("LLMResponse.success_response")
+        # trace_enter("LLMResponse.success_response")
 
         response = cls(
             success=True,
@@ -195,7 +196,7 @@ class LLMResponse:
             model=model
         )
 
-        trace_exit("LLMResponse.success_response")
+        # trace_exit("LLMResponse.success_response")
 
         return response
     

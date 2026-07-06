@@ -18,6 +18,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from common.tracing.trace_decorator import trace
 from knowledge.loaders.base_loader import BaseLoader
 from knowledge.loaders.document import Document
 
@@ -26,6 +27,7 @@ from knowledge.loaders.document import Document
 ###############################################################################
 class TextLoader(BaseLoader):
     ###########################################################################
+    @trace
     def load(
         self,
         file: Path,

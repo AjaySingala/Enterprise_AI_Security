@@ -1,211 +1,377 @@
 """
 ===============================================================================
-File        : client.py
+File        : llm.py
 Project     : Enterprise AI Gateway (EAIG)
+Author      : ChatGPT
 
 Description
 -----------
-Enterprise wrapper around the OpenAI Responses API.
+Centralized lightweight wrapper around the OpenAI Responses API.
 
-Responsibilities
-----------------
-- Initialize the OpenAI client
-- Validate configuration
-- Handle retries
-- Measure execution time
-- Log requests
-- Return a strongly typed LLMResponse
+Tested with:
+    openai==2.44.0
+    
+Why use a wrapper?
+------------------
+Instead of every demo directly calling the OpenAI SDK,
+all demos call this wrapper.
 
-NOTE
-----
-The actual generate() implementation will be completed in Part 2.
+Benefits:
+- Single location to change model
+- Easier logging
+- Easier debugging
+- Easier migration to Azure OpenAI
+- Easier migration to Anthropic/Gemini/Ollama later
+
+If tomorrow you move to Azure OpenAI, Anthropic, Gemini, or a local model, only this file changes.
 ===============================================================================
 """
 
 from __future__ import annotations
 
-from time import perf_counter
-from typing import Any
+import json
+import time
 
 from openai import OpenAI
 
-import config.config as config
-
-from common.logger import logger
-from common.llm.exceptions import InvalidConfigurationError
-from common.llm.provider import LLMProvider
+from config.config import settings
 from common.llm.response import LLMResponse
-from common.llm.retry import Retry
+from collections.abc import Generator
 
-class LLMClient:
-    """
-    Enterprise wrapper around the OpenAI SDK.
-
-    All demos should use this class rather than directly using
-    the OpenAI SDK.
-    """
-
-    ###########################################################################
-    # Constructor
-    ###########################################################################
+class LLM:
     def __init__(self) -> None:
-        logger.info("Initializing LLMClient...")
-        self._validate_configuration()
-        self.provider = LLMProvider.OPENAI
-        self.model = config.MODEL_NAME
-        self.retry = Retry()
+        if settings.debug:
+            print("--> Entering LLM.__init__")
+
         self.client = OpenAI(
-            api_key=config.OPENAI_API_KEY
+            api_key=settings.api_key
         )
 
-        logger.info(
-            "LLMClient initialized successfully."
-        )
+        if settings.debug:
+            print("<-- Exiting LLM.__init__")
 
-    ###########################################################################
-    # Configuration Validation
     ###########################################################################
     @staticmethod
-    def _validate_configuration() -> None:
+    def _extract_text(response) -> str:
         """
-        Validate mandatory configuration.
+        Safely extract text from a Responses API object.
         """
-        logger.debug("Validating configuration...")
+        # Preferred
+        if hasattr(response, "output_text") and response.output_text:
+            return response.output_text
 
-        if not config.OPENAI_API_KEY:
-            raise InvalidConfigurationError(
-                "OPENAI_API_KEY not found in .env"
-            )
+        # Fallback
+        try:
+            parts = []
+            for item in response.output:
+                if getattr(item, "type", "") != "message":
+                    continue
+                for content in item.content:
+                    if hasattr(content, "text"):
+                        parts.append(content.text)
 
-        if not config.MODEL_NAME:
-            raise InvalidConfigurationError(
-                "MODEL_NAME not configured."
-            )
+            return "\n".join(parts)
+        except Exception:
+            return ""
 
     ###########################################################################
-    # Private Helper
-    ###########################################################################
-    def _build_messages(
+    def generate(
         self,
         system_prompt: str,
-        user_prompt: str
-    ) -> list[dict[str, Any]]:
-        """
-        Build the input payload expected by the Responses API.
-        """
-        logger.debug("Building request payload...")
+        user_prompt: str,
+    ) -> LLMResponse:
+        if settings.debug:
+            print("--> Entering LLM.generate")
 
-        return [
-            {
-                "role": "system",
-                "content": [
-                    {
-                        "type": "input_text",
-                        "text": system_prompt
-                    }
-                ]
-            },
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "input_text",
-                        "text": user_prompt
-                    }
-                ]
-            }
-        ]
+        start = time.perf_counter()
 
-    ###########################################################################
-    # Private Helper
-    ###########################################################################
-    @staticmethod
-    def _get_usage(response: Any) -> tuple[int, int, int]:
-        """
-        Safely extract token usage.
+        response = self.client.responses.create(
+            model=settings.model,
+            input=[
+                {
+                    "role": "system",
+                    "content": [
+                        {
+                            "type": "input_text",
+                            "text": system_prompt,
+                        }
+                    ],
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "input_text",
+                            "text": user_prompt,
+                        }
+                    ],
+                },
+            ],
+        )
 
-        Returns
-        -------
-        (input_tokens, output_tokens, total_tokens)
+        elapsed = round(
+            time.perf_counter() - start,
+            3,
+        )
 
-        Returns zeros if usage information is unavailable.
-        """
         usage = getattr(response, "usage", None)
-
-        if usage is None:
-            return 0, 0, 0
 
         input_tokens = getattr(
             usage,
             "input_tokens",
-            0
+            0,
         )
 
         output_tokens = getattr(
             usage,
             "output_tokens",
-            0
+            0,
         )
 
         total_tokens = getattr(
             usage,
             "total_tokens",
-            input_tokens + output_tokens
+            input_tokens + output_tokens,
         )
 
-        return (
-            input_tokens,
-            output_tokens,
-            total_tokens
+        request_id = getattr(
+            response,
+            "id",
+            "",
         )
 
-    ###########################################################################
-    # Private Helper
-    ###########################################################################
-    @staticmethod
-    def _extract_text(response: Any) -> str:
-        """
-        Extract generated text from the Responses API object.
-        """
-        if hasattr(response, "output_text"):
-            return response.output_text
+        text = self._extract_text(response)
 
-        return ""
+        if settings.debug:
+            print("<-- Exiting LLM.generate")
 
-    ###########################################################################
-    # Private Helper
-    ###########################################################################
-    @staticmethod
-    def _elapsed(start: float) -> float:
-        """
-        Return elapsed time in seconds.
-        """
-        return round(
-            perf_counter() - start,
-            3
+        return LLMResponse(
+            text=text,
+            model=settings.model,
+            request_id=request_id,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            total_tokens=total_tokens,
+            elapsed_time=elapsed,
+            raw_response=response,
         )
 
     ###########################################################################
-    # Public API
-    ###########################################################################
-    def generate(
+    def generate_json(
         self,
         system_prompt: str,
-        user_prompt: str
-    ) -> LLMResponse:
-        """
-        Generate a response from the LLM.
+        user_prompt: str,
+    ) -> dict:
+        if settings.debug:
+            print("--> Entering LLM.generate_json")
 
-        NOTE
-        ----
-        Full implementation is added in Commit 0004B.
-        """
-        raise NotImplementedError(
-            "Implemented in Commit 0004B."
+        response = self.generate(
+            system_prompt,
+            user_prompt,
         )
 
+        cleaned = response.text.strip()
 
-###############################################################################
-# Singleton
-###############################################################################
-llm = LLMClient()
+        if cleaned.startswith("```json"):
+            cleaned = cleaned[7:]
+        elif cleaned.startswith("```"):
+            cleaned = cleaned[3:]
+
+        if cleaned.endswith("```"):
+            cleaned = cleaned[:-3]
+
+        cleaned = cleaned.strip()
+
+        result = json.loads(cleaned)
+
+        if settings.debug:
+            print("<-- Exiting LLM.generate_json")
+
+        return result
+
+    ###########################################################################
+    def chat(
+        self,
+        messages: list[dict],
+    ) -> LLMResponse:
+        """
+        Multi-turn chat using the Responses API.
+        """
+        if settings.debug:
+            print("--> Entering LLM.chat")
+
+        start = time.perf_counter()
+
+        #
+        # Convert OpenAI Chat format
+        # into Responses API format.
+        #
+        input_messages = []
+        for message in messages:
+            role = message["role"]
+            if role == "assistant":
+                content_type = "output_text"
+            else:
+                content_type = "input_text"
+
+            input_messages.append(
+                {
+                   "role": role,
+                    "content": [
+                        {
+                            "type": content_type,
+                            "text": message["content"],
+                        }
+                    ],
+                }
+            )
+
+        response = self.client.responses.create(
+            model=settings.model,
+            input=input_messages,
+        )
+
+        elapsed = round(
+            time.perf_counter() - start,
+            3,
+        )
+
+        usage = getattr(
+            response,
+            "usage",
+            None,
+        )
+
+        input_tokens = getattr(
+            usage,
+            "input_tokens",
+            0,
+        )
+
+        output_tokens = getattr(
+            usage,
+            "output_tokens",
+            0,
+        )
+
+        total_tokens = getattr(
+            usage,
+            "total_tokens",
+            input_tokens + output_tokens,
+        )
+
+        request_id = getattr(
+            response,
+            "id",
+            "",
+        )
+
+        text = self._extract_text(response)
+
+        if settings.debug:
+            print("<-- Exiting LLM.chat")
+
+        return LLMResponse(
+            text=text,
+            model=settings.model,
+            request_id=request_id,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            total_tokens=total_tokens,
+            elapsed_time=elapsed,
+            raw_response=response,
+        )
+    
+    ###########################################################################
+    def stream_chat(
+        self,
+        messages: list[dict],
+    ) -> Generator[str, None, LLMResponse]:
+        """
+        Stream a multi-turn conversation.
+
+        Yields:
+            Text chunks as they arrive.
+
+        Returns:
+            LLMResponse (via StopIteration.value)
+        """
+        if settings.debug:
+            print("--> Entering LLM.stream_chat")
+
+        start = time.perf_counter()
+
+        #
+        # Convert to Chat Completions format
+        #
+        stream = self.client.chat.completions.create(
+            model=settings.model,
+            messages=messages,
+            stream=True,
+            stream_options={
+                "include_usage": True,
+            },
+        )
+
+        full_text = ""
+        request_id = ""
+        input_tokens = 0
+        output_tokens = 0
+        total_tokens = 0
+
+        for chunk in stream:
+            #
+            # Request ID
+            #
+            if hasattr(chunk, "id"):
+                request_id = chunk.id
+
+            #
+            # Token
+            #
+            if (
+                chunk.choices
+                and
+                chunk.choices[0].delta.content
+            ):
+                token = chunk.choices[0].delta.content
+                full_text += token
+
+                yield token
+
+            #
+            # Usage (available only in final chunk if enabled)
+            #
+            usage = getattr(
+                chunk,
+                "usage",
+                None,
+            )
+
+            if usage:
+                input_tokens = usage.prompt_tokens
+                output_tokens = usage.completion_tokens
+                total_tokens = usage.total_tokens
+
+        elapsed = round(
+            time.perf_counter() - start,
+            3,
+        )
+
+        if settings.debug:
+            print("\n<-- Exiting LLM.stream_chat")
+
+        return LLMResponse(
+            success=True,
+            text=full_text,
+            model=settings.model,
+            request_id=request_id,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            total_tokens=total_tokens,
+            elapsed_time=elapsed,
+            raw_response=None,
+        )
+
+###
+llm = LLM()

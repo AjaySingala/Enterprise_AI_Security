@@ -26,7 +26,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from common.llm import llm
+from common.llm import LLM
 from common.prompts import PROMPT_INJECTION_SYSTEM_PROMPT
 from config.config import settings
 
@@ -55,7 +55,8 @@ class PromptInjectionClassifier:
             print("--> Entering PromptInjectionClassifier.classify")
 
         try:
-            result = llm.generate_json(
+            self.llm = LLM()
+            result = self.llm.generate_json(
                 system_prompt=PROMPT_INJECTION_SYSTEM_PROMPT,
                 user_prompt=prompt,
             )

@@ -1,5 +1,7 @@
 """
 ===============================================================================
+Testing the Secure Chat application's streaming behavior
+
 Run:
 python -m tests.secure_chat.test_stream_chat_engine
 ===============================================================================

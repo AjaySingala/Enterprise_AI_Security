@@ -30,13 +30,21 @@ class Settings:
         self.model = os.getenv("MODEL_NAME","gpt-4o-mini")
         self.text_embedding_model = os.getenv("TEXT_EMBEDDING_MODEL", "text-embedding-3-small"),
         self.debug = (os.getenv("DEBUG","True").lower() == "true")
-        self.log_level=os.getenv("LOG_LEVEL", "INFO"),
+        self.log_level=os.getenv("LOG_LEVEL", "INFO")
 
         if not self.api_key:
             raise ValueError(
                 "OPENAI_API_KEY not found in .env"
             )
-       
+
+        ###############################################################################
+        # Logging
+        ###############################################################################
+        self.log_to_console = os.getenv("LOG_TO_CONSOLE", True)
+        self.log_to_file = os.getenv("LOG_TO_FILE", True)
+        self.log_folder = os.getenv("LOG_FOLDER", "logs")
+        self.log_filename = os.getenv("LOG_FILENAME", "eaig.log")
+
 settings = Settings()
 
 # print(f"OPENAI_API_KEY: {os.getenv('OPENAI_API_KEY')}")

@@ -4,14 +4,11 @@ Run:
 python -m tests.llms.test_llm
 ===============================================================================
 """
-from common.llm import llm
+from common.services import services
 
-response = llm.generate(
-
+response = services.llm.generate(
     system_prompt="Reply with exactly the word Hello.",
-
     user_prompt="Say hello."
-
 )
 
 print()

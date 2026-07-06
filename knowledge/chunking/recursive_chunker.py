@@ -22,7 +22,7 @@ from knowledge.chunking.base_chunker import BaseChunker
 from knowledge.chunking.chunk import Chunk
 from knowledge.loaders.document import Document
 
-from common.tracer import trace_enter, trace_exit
+from common.tracing.trace_decorator import trace
 
 ###############################################################################
 # Recursive Chunker
@@ -40,6 +40,7 @@ class RecursiveChunker(BaseChunker):
         )
 
     ###########################################################################
+    @trace
     def chunk(
         self,
         document: Document,
@@ -47,8 +48,6 @@ class RecursiveChunker(BaseChunker):
         pieces = self._splitter.split_text(
             document.content
         )
-        trace_enter("LLMResponse.is_success")
-
 
         chunks: list[Chunk] = []
 

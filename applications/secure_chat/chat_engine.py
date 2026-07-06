@@ -40,6 +40,7 @@ from common.services import services
 
 from config.pricing import MODEL_PRICING
 from collections.abc import Generator
+from common.tracing.trace_decorator import trace
 
 ###############################################################################
 # Chat Engine
@@ -187,6 +188,7 @@ class ChatEngine:
         )
     
     ###########################################################################
+    @trace
     def stream_chat(
         self,
         user_message: str,
