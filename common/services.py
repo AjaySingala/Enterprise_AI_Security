@@ -9,6 +9,17 @@ Version:
 
 Python:
     3.13.11
+
+Rules:
+| ------------------ | ----------------------- | ---------------------- |
+| Layer              | Can construct objects?  | Can import `services`? |
+| ------------------ | ----------------------- | ---------------------- |
+| common/services.py | ✅ Yes                  | N/A                   |
+| applications       | ❌ No                   | ✅ Yes                |
+| api                | ❌ No                   | ✅ Yes                |
+| tests              | ❌ No                   | ✅ Yes                |
+| knowledge          | ❌ No                   | ❌ Never              |
+| security           | ❌ No                   | ❌ Never              |
 ===============================================================================
 """
 
@@ -31,13 +42,16 @@ class ServiceRegistry:
     """
     Central registry for shared singleton services.
     """
-
     ###########################################################################
-    def __init__(self):
+    def __init__(self):   
         self._pipeline = SecurityPipeline()
         self._metrics = MetricsService()
         self._audit = AuditService()
         self._llm = LLM()
+
+        self._initialize_knowledge()
+
+    def _initialize_knowledge(self):
         self._embedding_engine = EmbeddingEngine()
         self._vector_store = FAISSVectorStore()
         self._retriever = Retriever(
