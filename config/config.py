@@ -28,7 +28,7 @@ class Settings:
     def __init__(self) -> None:
         self.api_key = os.getenv("OPENAI_API_KEY", "").strip()
         self.model = os.getenv("MODEL_NAME","gpt-4o-mini")
-        self.text_embedding_model = os.getenv("TEXT_EMBEDDING_MODEL", "text-embedding-3-small"),
+        self.text_embedding_model = os.getenv("TEXT_EMBEDDING_MODEL", "text-embedding-3-small")
         self.debug = (os.getenv("DEBUG","True").lower() == "true")
         self.log_level=os.getenv("LOG_LEVEL", "INFO")
 
@@ -40,10 +40,12 @@ class Settings:
         ###############################################################################
         # Logging
         ###############################################################################
-        self.log_to_console = os.getenv("LOG_TO_CONSOLE", True)
-        self.log_to_file = os.getenv("LOG_TO_FILE", True)
-        self.log_folder = os.getenv("LOG_FOLDER", "logs")
-        self.log_filename = os.getenv("LOG_FILENAME", "eaig.log")
+        self.log_to_console = (os.getenv("LOG_TO_CONSOLE", "True").lower() == "true")
+        self.log_to_file = (os.getenv("LOG_TO_FILE", "True").lower() == "true")
+        self.log_folder = os.getenv("LOG_FOLDER","logs",)
+        self.log_filename = os.getenv("LOG_FILENAME","eaig.log",)
+        self.enable_tracing = (os.getenv("ENABLE_TRACING", "True").lower() == "true")
+        self.trace_output = (os.getenv("TRACE_OUTPUT", "console").strip().lower())
 
 settings = Settings()
 

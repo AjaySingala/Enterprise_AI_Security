@@ -22,6 +22,7 @@ def trace(func):
         *args,
         **kwargs,
     ):
+        print("TRACE DECORATOR CALLED")
         start = trace_manager.enter(
             func.__qualname__,
         )
