@@ -38,7 +38,7 @@ def main():
 
     for chunk in chunks:
         print("-" * 80)
-        print(f"Chunk #{chunk.chunk_number}")
+        print(f"Chunk #{chunk.chunk_index}")
         print(f"Chunk ID : {chunk.chunk_id}")
         print(f"Length   : {len(chunk.content)}")
         print()

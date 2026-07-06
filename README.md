@@ -48,7 +48,7 @@ python -m tests.confidential.test_engine
 python -m tests.secure_chat.test_stream_chat_engine
 python -m tests.llms.test_stream_chat
 
-# Feature 6: Knowledge Base:
+# Feature 6: Knowledge Base and Chunking:
 python -m tests.knowledge.test_text_loader
 python -m tests.knowledge.test_splitter
 python -m tests.knowledge.test_recursive_chunker
@@ -56,4 +56,8 @@ python -m tests.knowledge.test_recursive_chunker
 # If there is an spaCy related error, uninstall and reinstall spaCy:
 pip uninstall spacy
 pip install --no-cache-dir spacy==3.8.13
+
+# Feture 7: Embeddings:
+python -m tests.knowledge.test_embedding_model
+python -m tests.knowledge.test_embedding_engine
 

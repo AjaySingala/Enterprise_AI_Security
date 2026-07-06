@@ -16,6 +16,7 @@ Python:
 
 from __future__ import annotations
 from dataclasses import dataclass, field
+from typing import Any
 import uuid
 
 ###############################################################################
@@ -25,11 +26,16 @@ import uuid
 class Chunk:
     document_id: str
     content: str
-    chunk_number: int
+    chunk_index: int = 0
+    # chunk_id is auto-generated.
     chunk_id: str = field(
         default_factory=lambda: str(uuid.uuid4())
     )
 
-    metadata: dict = field(
+    metadata: dict[str, Any] = field(
         default_factory=dict
     )
+
+    @property
+    def length(self) -> int:
+        return len(self.content)
