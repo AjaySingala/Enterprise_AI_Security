@@ -22,6 +22,7 @@ from security.pipeline.pipeline_engine import SecurityPipeline
 
 from knowledge.embeddings.embedding_engine import EmbeddingEngine
 from knowledge.vectorstores.faiss_vectorstore import FAISSVectorStore
+from knowledge.retrieval.retriever import Retriever
 
 ###############################################################################
 # Service Registry
@@ -39,6 +40,10 @@ class ServiceRegistry:
         self._llm = LLM()
         self._embedding_engine = EmbeddingEngine()
         self._vector_store = FAISSVectorStore()
+        self._retriever = Retriever(
+            embedding_engine=self._embedding_engine,
+            vector_store=self._vector_store,
+        )
 
     ###########################################################################
     @property
@@ -66,6 +71,10 @@ class ServiceRegistry:
     @property
     def vector_store(self) -> FAISSVectorStore:
         return self._vector_store
+
+    @property
+    def retriever(self):
+        return self._retriever
 
 ###############################################################################
 # Singleton
