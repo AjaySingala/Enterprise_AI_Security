@@ -64,3 +64,5 @@ python -m tests.knowledge.test_embedding_engine
 # Feature 8: Batch Embeddings
 python -m tests.knowledge.test_batch_embeddings
 
+# Feature 9: Vector Store Abstraction and FAISS Vector Store.
+python -m tests.knowledge.test_faiss_vectorstore

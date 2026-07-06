@@ -19,7 +19,9 @@ from common.audit import AuditService
 from common.llm import LLM
 
 from security.pipeline.pipeline_engine import SecurityPipeline
+
 from knowledge.embeddings.embedding_engine import EmbeddingEngine
+from knowledge.vectorstores.faiss_vectorstore import FAISSVectorStore
 
 ###############################################################################
 # Service Registry
@@ -36,6 +38,7 @@ class ServiceRegistry:
         self._audit = AuditService()
         self._llm = LLM()
         self._embedding_engine = EmbeddingEngine()
+        self._vector_store = FAISSVectorStore()
 
     ###########################################################################
     @property
@@ -59,6 +62,10 @@ class ServiceRegistry:
     @property
     def embedding_engine(self) -> EmbeddingEngine:
         return self._embedding_engine
+
+    @property
+    def vector_store(self) -> FAISSVectorStore:
+        return self._vector_store
 
 ###############################################################################
 # Singleton
