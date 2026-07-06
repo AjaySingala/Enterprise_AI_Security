@@ -34,6 +34,7 @@ from security.pipeline.pipeline_engine import SecurityPipeline
 from knowledge.embeddings.embedding_engine import EmbeddingEngine
 from knowledge.vectorstores.faiss_vectorstore import FAISSVectorStore
 from knowledge.retrieval.retriever import Retriever
+from knowledge.pipelines.prompt_builder import PromptBuilder
 
 ###############################################################################
 # Service Registry
@@ -48,6 +49,7 @@ class ServiceRegistry:
         self._metrics = MetricsService()
         self._audit = AuditService()
         self._llm = LLM()
+        self._prompt_builder = PromptBuilder()
 
         self._initialize_knowledge()
 
@@ -89,6 +91,10 @@ class ServiceRegistry:
     @property
     def retriever(self):
         return self._retriever
+    
+    @property
+    def prompt_builder(self):
+        return self._prompt_builder
 
 ###############################################################################
 # Singleton
