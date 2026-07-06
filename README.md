@@ -61,3 +61,6 @@ pip install --no-cache-dir spacy==3.8.13
 python -m tests.knowledge.test_embedding_model
 python -m tests.knowledge.test_embedding_engine
 
+# Feature 8: Batch Embeddings
+python -m tests.knowledge.test_batch_embeddings
+

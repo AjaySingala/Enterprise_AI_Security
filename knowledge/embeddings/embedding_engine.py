@@ -28,7 +28,7 @@ class EmbeddingEngine:
 
     ##########################################################################
     @trace
-    def embed(
+    def embed_individual(
         self,
         chunk: Chunk,
     ) -> Embedding:
@@ -56,4 +56,44 @@ class EmbeddingEngine:
                 else 0
             ),
         )
+
+    @trace
+    def embed(
+        self,
+        chunk: Chunk,
+    ) -> Embedding:
+        return self.embed_batch([chunk])[0]
+
+    @trace
+    def embed_batch(
+        self,
+        chunks: list[Chunk],
+    ) -> list[Embedding]:
+        if not chunks:
+            return []
+
+        response = self.client.embeddings.create(
+            model=self.model,
+            input=[chunk.content for chunk in chunks],
+        )
+
+        usage = getattr(response, "usage", None)
+        embeddings: list[Embedding] = []
+
+        for chunk, item in zip(chunks, response.data):
+            embeddings.append(
+                Embedding(
+                    chunk_id=chunk.chunk_id,
+                    vector=item.embedding,
+                    model=self.model,
+                    dimensions=len(item.embedding),
+                    input_tokens=(
+                        usage.prompt_tokens
+                        if usage
+                        else 0
+                    ),
+                )
+            )
+
+        return embeddings
     

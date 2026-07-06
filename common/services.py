@@ -19,6 +19,7 @@ from common.audit import AuditService
 from common.llm import LLM
 
 from security.pipeline.pipeline_engine import SecurityPipeline
+from knowledge.embeddings.embedding_engine import EmbeddingEngine
 
 ###############################################################################
 # Service Registry
@@ -34,6 +35,7 @@ class ServiceRegistry:
         self._metrics = MetricsService()
         self._audit = AuditService()
         self._llm = LLM()
+        self._embedding_engine = EmbeddingEngine()
 
     ###########################################################################
     @property
@@ -53,6 +55,10 @@ class ServiceRegistry:
     @property
     def llm(self) -> LLM:
         return self._llm
+
+    @property
+    def embedding_engine(self) -> EmbeddingEngine:
+        return self._embedding_engine
 
 ###############################################################################
 # Singleton
