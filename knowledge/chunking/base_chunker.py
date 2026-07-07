@@ -20,6 +20,7 @@ from abc import ABC
 from abc import abstractmethod
 
 from knowledge.chunking.chunk import Chunk
+from knowledge.loaders.document import Document
 
 ###############################################################################
 # Base Chunker

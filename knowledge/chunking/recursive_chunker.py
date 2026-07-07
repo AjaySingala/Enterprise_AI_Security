@@ -56,13 +56,8 @@ class RecursiveChunker(BaseChunker):
                 Chunk(
                     document_id=document.document_id,
                     content=piece,
-                    chunk_index=index + 1,
-                    metadata={
-                        "source": str(document.source),
-                        "loader": document.metadata.get(
-                            "loader"
-                        ),
-                    },
+                    chunk_index=index,
+                    metadata=document.metadata,
                 )
             )
 
