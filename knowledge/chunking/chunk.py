@@ -19,6 +19,8 @@ from dataclasses import dataclass, field
 from typing import Any
 import uuid
 
+from knowledge.loaders.document_metadata import DocumentMetadata
+
 ###############################################################################
 # Chunk
 ###############################################################################
@@ -32,8 +34,8 @@ class Chunk:
         default_factory=lambda: str(uuid.uuid4())
     )
 
-    metadata: dict[str, Any] = field(
-        default_factory=dict
+    metadata: DocumentMetadata = field(
+        default_factory=DocumentMetadata,
     )
 
     @property

@@ -22,6 +22,8 @@ from common.tracing.trace_decorator import trace
 from knowledge.loaders.base_loader import BaseLoader
 from knowledge.loaders.document import Document
 
+from knowledge.loaders.document_metadata import DocumentMetadata
+
 ###############################################################################
 # Text Loader
 ###############################################################################
@@ -31,18 +33,25 @@ class TextLoader(BaseLoader):
     def load(
         self,
         file: Path,
+        metadata: DocumentMetadata | None = None,
     ) -> Document:
         text = file.read_text(
             encoding="utf-8",
         )
 
+        #
+        # Use supplied metadata or create a default instance.
+        #
+        document_metadata = metadata or DocumentMetadata()
+
+        self.populate_common_metadata(
+            file,
+            document_metadata,
+        )
+
         return Document(
             source=file,
             content=text,
-            metadata={
-                "loader": "TextLoader",
-                "extension": file.suffix,
-                "filename": file.name,
-            },
+            metadata=document_metadata,
         )
     

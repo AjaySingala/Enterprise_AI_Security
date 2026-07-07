@@ -18,6 +18,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 import uuid
 
+from knowledge.loaders.document_metadata import DocumentMetadata
+
 ###############################################################################
 # Document
 ###############################################################################
@@ -29,8 +31,8 @@ class Document:
         default_factory=lambda: str(uuid.uuid4())
     )
 
-    metadata: dict = field(
-        default_factory=dict
+    metadata: DocumentMetadata = field(
+        default_factory=DocumentMetadata,
     )
 
     created_at: datetime = field(
