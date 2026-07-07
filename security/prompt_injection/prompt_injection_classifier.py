@@ -26,7 +26,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from common.llm import LLM
+from common.llm.client import LLM
 from common.prompts import PROMPT_INJECTION_SYSTEM_PROMPT
 from config.config import settings
 

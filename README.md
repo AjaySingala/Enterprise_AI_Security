@@ -70,3 +70,6 @@ python -m tests.knowledge.test_vector_store_inspector
 
 # Feature 10: Retrieval.
 python -m tests.knowledge.test_retriever
+
+# Feature 10: Knowledge Pipeline.
+python -m tests.knowledge.test_knowledge_pipeline

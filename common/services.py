@@ -27,14 +27,18 @@ from __future__ import annotations
 
 from common.metrics import MetricsService
 from common.audit import AuditService
-from common.llm import LLM
+from common.llm.client import LLM
 
 from security.pipeline.pipeline_engine import SecurityPipeline
 
 from knowledge.embeddings.embedding_engine import EmbeddingEngine
 from knowledge.vectorstores.faiss_vectorstore import FAISSVectorStore
 from knowledge.retrieval.retriever import Retriever
-from knowledge.pipelines.prompt_builder import PromptBuilder
+# from knowledge.pipelines.prompt_builder import PromptBuilder
+from knowledge.pipelines import (
+    KnowledgePipeline,
+    PromptBuilder,
+)
 
 ###############################################################################
 # Service Registry
@@ -49,9 +53,13 @@ class ServiceRegistry:
         self._metrics = MetricsService()
         self._audit = AuditService()
         self._llm = LLM()
-        self._prompt_builder = PromptBuilder()
-
         self._initialize_knowledge()
+        self._prompt_builder = PromptBuilder()
+        self._knowledge_pipeline = KnowledgePipeline(
+            retriever=self._retriever,
+            prompt_builder=self._prompt_builder,
+            llm = self._llm
+        )
 
     def _initialize_knowledge(self):
         self._embedding_engine = EmbeddingEngine()
@@ -95,6 +103,10 @@ class ServiceRegistry:
     @property
     def prompt_builder(self):
         return self._prompt_builder
+
+    @property
+    def knowledge_pipeline(self) -> KnowledgePipeline:
+        return self._knowledge_pipeline
 
 ###############################################################################
 # Singleton

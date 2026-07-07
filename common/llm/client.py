@@ -146,6 +146,7 @@ class LLM:
             print("<-- Exiting LLM.generate")
 
         return LLMResponse(
+            success=True,
             text=text,
             model=settings.model,
             request_id=request_id,
