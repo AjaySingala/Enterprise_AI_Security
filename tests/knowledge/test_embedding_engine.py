@@ -5,6 +5,7 @@ python -m tests.knowledge.test_embedding_engine
 
 from knowledge.chunking.chunk import Chunk
 from knowledge.embeddings.embedding_engine import EmbeddingEngine
+from knowledge.embeddings.openai_embedding_provider import OpenAIEmbeddingProvider
 
 def main():
     chunk = Chunk(
@@ -16,7 +17,10 @@ vector search with LLM reasoning.
         chunk_index = 0,
     )
 
-    engine = EmbeddingEngine()
+    provider = OpenAIEmbeddingProvider()
+    engine = EmbeddingEngine(
+        provider=provider,
+    )
     embedding = engine.embed(
         chunk,
     )

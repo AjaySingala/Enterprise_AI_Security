@@ -22,6 +22,7 @@ from time import perf_counter
 
 from knowledge.chunking.chunk import Chunk
 from knowledge.embeddings.embedding_engine import EmbeddingEngine
+from knowledge.embeddings.openai_embedding_provider import OpenAIEmbeddingProvider
 
 def main():
     chunks = [
@@ -45,7 +46,10 @@ def main():
 
     ]
 
-    engine = EmbeddingEngine()
+    provider = OpenAIEmbeddingProvider()
+    engine = EmbeddingEngine(
+        provider=provider,
+    )
 
     ###########################################################################
     # Individual Embeddings
@@ -59,7 +63,7 @@ def main():
     single_embeddings = []
 
     for chunk in chunks:
-        embedding = engine.embed_individual(chunk)      # Can use embed() as well.
+        embedding = engine.embed(chunk)      # Can use embed() as well.
         single_embeddings.append(embedding)
 
     single_elapsed = (perf_counter() - start) * 1000

@@ -4,7 +4,7 @@ Vector Store Factory
 
 from __future__ import annotations
 
-from config import settings
+from config.config import settings
 
 from knowledge.vectorstores.base_vectorstore import BaseVectorStore
 from knowledge.vectorstores.faiss_vectorstore import FAISSVectorStore

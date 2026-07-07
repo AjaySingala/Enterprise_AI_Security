@@ -9,7 +9,7 @@ Version:
 ===============================================================================
 """
 from .embedding import Embedding
-from .provider import EmbeddingProvider
+from .embedding_provider import EmbeddingProvider
 
 __all__ = [
     "Embedding",

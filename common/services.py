@@ -41,6 +41,8 @@ from knowledge.pipelines import (
 )
 from common.factories import VectorStoreFactory
 
+from knowledge.embeddings.openai_embedding_provider import OpenAIEmbeddingProvider
+
 ###############################################################################
 # Service Registry
 ###############################################################################
@@ -63,7 +65,10 @@ class ServiceRegistry:
         )
 
     def _initialize_knowledge(self):
-        self._embedding_engine = EmbeddingEngine()
+        provider = OpenAIEmbeddingProvider()
+        self._embedding_engine = EmbeddingEngine(
+            provider=provider,
+        )
         self._vector_store = VectorStoreFactory.create()
         self._retriever = Retriever(
             embedding_engine=self._embedding_engine,

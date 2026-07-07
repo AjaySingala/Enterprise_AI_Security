@@ -1,0 +1,22 @@
+from __future__ import annotations
+
+from abc import ABC
+from abc import abstractmethod
+
+from knowledge.chunking.chunk import Chunk
+from knowledge.embeddings.embedding import Embedding
+
+class EmbeddingProvider(ABC):
+    @abstractmethod
+    def embed(
+        self,
+        chunk: Chunk,
+    ) -> Embedding:
+        pass
+
+    @abstractmethod
+    def embed_batch(
+        self,
+        chunks: list[Chunk],
+    ) -> list[Embedding]:
+        pass

@@ -4,10 +4,15 @@ python -m tests.knowledge.test_faiss_vectorstore
 """
 from knowledge.chunking.chunk import Chunk
 from knowledge.embeddings.embedding_engine import EmbeddingEngine
+from knowledge.embeddings.openai_embedding_provider import OpenAIEmbeddingProvider
 from knowledge.vectorstores.faiss_vectorstore import FAISSVectorStore
 
 def main():
-    engine = EmbeddingEngine()
+    provider = OpenAIEmbeddingProvider()
+    engine = EmbeddingEngine(
+        provider=provider,
+    )
+
     store = FAISSVectorStore()
     chunks = [
         Chunk(
