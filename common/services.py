@@ -39,6 +39,7 @@ from knowledge.pipelines import (
     KnowledgePipeline,
     PromptBuilder,
 )
+from common.factories import VectorStoreFactory
 
 ###############################################################################
 # Service Registry
@@ -63,7 +64,7 @@ class ServiceRegistry:
 
     def _initialize_knowledge(self):
         self._embedding_engine = EmbeddingEngine()
-        self._vector_store = FAISSVectorStore()
+        self._vector_store = VectorStoreFactory.create()
         self._retriever = Retriever(
             embedding_engine=self._embedding_engine,
             vector_store=self._vector_store,

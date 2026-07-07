@@ -47,6 +47,8 @@ class Settings:
         self.enable_tracing = (os.getenv("ENABLE_TRACING", "True").lower() == "true")
         self.trace_output = (os.getenv("TRACE_OUTPUT", "console").strip().lower())
 
+        self.vector_store = (os.getenv("VECTOR_STORE", "faiss").strip().lower())
+
 settings = Settings()
 
 # print(f"OPENAI_API_KEY: {os.getenv('OPENAI_API_KEY')}")
