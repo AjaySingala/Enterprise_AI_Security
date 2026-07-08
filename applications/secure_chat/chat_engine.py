@@ -350,7 +350,6 @@ class ChatEngine:
             data=chat_result,
         )
 
-        return
     ###########################################################################
     def clear_history(
         self,

@@ -19,7 +19,11 @@ python -m demos.demo01_prompt_injection
 # Check OPENAI SDK version.
 python -c "import openai; print(openai.__version__)"
 
-# Run tests:
+# Run Regression Tests:
+python -m tests.run_regression
+
+# Run individual tests:
+## Featuer 0: LLMs:
 python -m tests.llms.test_llm
 python -m tests.llms.test_llm_json
 
@@ -50,7 +54,7 @@ python -m tests.llms.test_stream_chat
 
 # Feature 6: Knowledge Base and Chunking:
 python -m tests.knowledge.test_text_loader
-python -m tests.knowledge.test_splitter
+python -m tests.knowledge.test_chunker
 python -m tests.knowledge.test_recursive_chunker
 
 # If there is an spaCy related error, uninstall and reinstall spaCy:
@@ -63,6 +67,8 @@ python -m tests.knowledge.test_embedding_engine
 
 # Feature 8: Batch Embeddings
 python -m tests.knowledge.test_batch_embeddings
+python -m tests.knowledge.test_prompt_builder
+
 
 # Feature 9: Vector Store Abstraction and FAISS Vector Store.
 python -m tests.knowledge.test_faiss_vectorstore
@@ -73,3 +79,4 @@ python -m tests.knowledge.test_retriever
 
 # Feature 10: Knowledge Pipeline.
 python -m tests.knowledge.test_knowledge_pipeline
+

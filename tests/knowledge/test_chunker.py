@@ -1,6 +1,6 @@
 """
 Run:
-python -m tests.knowledge.test_splitter
+python -m tests.knowledge.test_chunker
 """
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
