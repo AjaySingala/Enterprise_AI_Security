@@ -5,7 +5,9 @@ python -m tests.knowledge.test_faiss_vectorstore
 from knowledge.chunking.chunk import Chunk
 from knowledge.embeddings.embedding_engine import EmbeddingEngine
 from knowledge.embeddings.openai_embedding_provider import OpenAIEmbeddingProvider
+from knowledge.loaders.document_metadata import DocumentMetadata
 from knowledge.vectorstores.faiss_vectorstore import FAISSVectorStore
+from knowledge.query.metadata_query import MetadataQuery
 
 def main():
     provider = OpenAIEmbeddingProvider()
@@ -21,19 +23,31 @@ def main():
             chunk_index=0,
         ),
         Chunk(
-            document_id="doc1",
+            document_id="doc2",
             content="Vector databases store embeddings.",
             chunk_index=1,
         ),
         Chunk(
-            document_id="doc1",
+            document_id="doc3",
             content="Prompt Injection attacks target LLMs.",
             chunk_index=2,
         ),
         Chunk(
-            document_id="doc1",
+            document_id="doc4",
             content="Python is a programming language.",
             chunk_index=3,
+        ),
+        Chunk(
+            document_id="doc-5",
+            content="Annual leave policy",
+            chunk_index=0,
+            metadata=DocumentMetadata(department="HR", country="India",),
+        ),
+        Chunk(
+            document_id="doc-6",
+            content="Expense reimbursement policy",
+            chunk_index=0,
+            metadata=DocumentMetadata(department="Finance", country="India",),
         ),
     ]
 
@@ -70,16 +84,11 @@ def main():
     print("----------------")
 
     for result in results:
-        print(
-            f"Rank : {result.rank}"
-        )
-        print(
-            f"Score: {result.score:.4f}"
-        )
-        print(
-            result.embedding.chunk.chunk_id
-        )
+        print(f"Chunk: {result.embedding.chunk.content}")
+        print(f"Rank : {result.rank}")
+        print(f"Score: {result.score:.4f}")
+        print(f"Chunk Id: {result.embedding.chunk.chunk_id}")
         print()
-
+        
 if __name__ == "__main__":
     main()

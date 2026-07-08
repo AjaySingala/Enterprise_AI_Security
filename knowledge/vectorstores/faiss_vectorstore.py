@@ -12,8 +12,20 @@ from common.tracing.trace_decorator import trace
 from knowledge.embeddings.embedding import Embedding
 from knowledge.vectorstores.base_vectorstore import BaseVectorStore
 from knowledge.vectorstores.search_result import SearchResult
+from knowledge.query.metadata_query import MetadataQuery
+from knowledge.query.filter_operator import FilterOperator
 
 class FAISSVectorStore(BaseVectorStore):
+    # When the caller requests top_k=5, FAISS actually retrieves:
+    #   5 × 20 = 100
+    # candidates before applying the metadata filters.
+    # Why?
+    # If you only retrieve exactly five vectors and then filter them, 
+    # you might end up with zero results even though relevant matching documents exist
+    # slightly lower in the similarity ranking. 
+    # Using an oversampling multiplier gives much better recall while keeping the API unchanged.
+    POST_FILTER_MULTIPLIER = 20     # The oversampling multiplier.
+
     ##########################################################################
     def __init__(self):
         self.index = None
@@ -68,6 +80,7 @@ class FAISSVectorStore(BaseVectorStore):
         self,
         query_embedding: Embedding,
         k: int = 5,
+        metadata_query: MetadataQuery | None = None,
     ) -> list[SearchResult]:
         if self.index is None:
             return []
@@ -77,31 +90,52 @@ class FAISSVectorStore(BaseVectorStore):
             dtype=np.float32,
         )
 
+        candidate_count = max(
+            k,
+            k * self.POST_FILTER_MULTIPLIER,
+        )
+
+        candidate_count = min(
+            candidate_count,
+            len(self.embeddings),
+        )
+
         distances, indices = self.index.search(
             query,
-            k,
+            candidate_count,
         )
 
         results: list[SearchResult] = []
 
-        for rank, (distance, index) in enumerate(
-            zip(
-                distances[0],
-                indices[0],
-            ),
-            start=1,
-        ):
+        rank = 1
 
+        for distance, index in zip(
+            distances[0],
+            indices[0],
+        ):
             if index == -1:
+                continue
+
+            embedding = self.embeddings[index]
+
+            if not self._matches(
+                embedding,
+                metadata_query,
+            ):
                 continue
 
             results.append(
                 SearchResult(
-                    embedding=self.embeddings[index],
+                    embedding=embedding,
                     score=float(distance),
                     rank=rank,
                 )
             )
+
+            rank += 1
+
+            if len(results) >= k:
+                break
 
         return results
 
@@ -119,3 +153,34 @@ class FAISSVectorStore(BaseVectorStore):
     ) -> None:
         self.index = None
         self.embeddings.clear()
+
+    def _matches(
+        self,
+        embedding: Embedding,
+        metadata_query: MetadataQuery | None,
+    ) -> bool:
+        if (
+            metadata_query is None
+            or metadata_query.empty
+        ):
+            return True
+
+        metadata = embedding.chunk.metadata
+
+        for metadata_filter in metadata_query.filters:
+            value = getattr(
+                metadata,
+                metadata_filter.field,
+                None,
+            )
+
+            if metadata_filter.operator != FilterOperator.EQ:
+                raise NotImplementedError(
+                    f"{metadata_filter.operator} not yet supported."
+                )
+
+            if value != metadata_filter.value:
+                return False
+
+        return True
+    

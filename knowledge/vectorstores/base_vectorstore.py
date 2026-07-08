@@ -10,6 +10,7 @@ from abc import ABC
 from abc import abstractmethod
 
 from knowledge.embeddings.embedding import Embedding
+from knowledge.query.metadata_query import MetadataQuery
 
 class BaseVectorStore(ABC):
     @abstractmethod
@@ -24,6 +25,7 @@ class BaseVectorStore(ABC):
         self,
         query_embedding: Embedding,
         k: int = 5,
+        metadata_query: MetadataQuery | None = None,
     ):
         pass
 

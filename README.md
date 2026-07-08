@@ -21,6 +21,11 @@ python -c "import openai; print(openai.__version__)"
 
 # Run Regression Tests:
 python -m tests.run_regression
+python -m tests.run_regression
+python -m tests.run_regression --verbose
+python -m tests.run_regression -v
+python -m tests.run_regression --quite
+python -m tests.run_regression -q
 
 # Run individual tests:
 ## Featuer 0: LLMs:
