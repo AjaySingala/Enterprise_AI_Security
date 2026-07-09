@@ -111,6 +111,11 @@ TESTS = [
         category="Knowledge SDK",
         level="Loader",
     ),
+    TestCase(
+        module="tests.knowledge.test_knowledge_indexer",
+        category="Knowledge SDK",
+        level="Loader",
+    ),
 
     ###########################################################################
     # PII
