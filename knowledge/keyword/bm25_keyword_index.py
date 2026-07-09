@@ -32,68 +32,138 @@ from knowledge.keyword.base_keyword_index import BaseKeywordIndex
 
 from rank_bm25 import BM25Okapi
 
+from knowledge.retrieval.search_result import SearchResult
+from knowledge.vectorstores.retrieval_method import RetrievalMethod
+
 class BM25KeywordIndex(BaseKeywordIndex):
     def __init__(self):
         self._chunks: list[Chunk] = []
         self._documents: list[list[str]] = []
         self._bm25 = None
 
-###############################################################################
-def _tokenize(
-    self,
-    text: str,
-) -> list[str]:
-    """
-    Tokenize text for BM25.
+    ###############################################################################
+    def _tokenize(
+        self,
+        text: str,
+    ) -> list[str]:
+        """
+        Tokenize text for BM25.
 
-    Version 1:
-        - lowercase
-        - remove punctuation
-        - split on whitespace
-    """
-    text = text.lower()
+        Version 1:
+            - lowercase
+            - remove punctuation
+            - split on whitespace
+        """
+        text = text.lower()
 
-    text = re.sub(
-        r"[^\w\s]",
-        " ",
-        text,
-    )
-
-    return text.split()
-
-###############################################################################
-@trace
-def add(
-    self,
-    chunks: list[Chunk],
-) -> None:
-    """
-    Add chunks to the BM25 index.
-    """
-    for chunk in chunks:
-        self._chunks.append(chunk)
-        self._documents.append(
-            self._tokenize(
-                chunk.content,
-            )
+        text = re.sub(
+            r"[^\w\s]",
+            " ",
+            text,
         )
 
-    self._bm25 = BM25Okapi(
-        self._documents,
-    )
+        return text.split()
 
-###############################################################################
-def count(
-    self,
-) -> int:
-    return len(
-        self._chunks,
-    )
+    ###############################################################################
+    @trace
+    def add(
+        self,
+        chunks: list[Chunk],
+    ) -> None:
+        """
+        Add chunks to the BM25 index.
+        """
+        for chunk in chunks:
+            self._chunks.append(chunk)
+            self._documents.append(
+                self._tokenize(
+                    chunk.content,
+                )
+            )
 
-###############################################################################
-def clear(
-    self,
-) -> None:
-    self._chunks.clear()
-    self._documents.clear()
-    self._bm25 = None
+        self._bm25 = BM25Okapi(
+            self._documents,
+        )
+
+    ###############################################################################
+    def count(
+        self,
+    ) -> int:
+        return len(
+            self._chunks,
+        )
+
+    ###############################################################################
+    def clear(
+        self,
+    ) -> None:
+        self._chunks.clear()
+        self._documents.clear()
+        self._bm25 = None
+
+    ###############################################################################
+    @trace
+    def search(
+        self,
+        query: str,
+        k: int = 5,
+    ) -> list[SearchResult]:
+        """
+        Perform BM25 keyword search.
+        """
+        #
+        # Empty index.
+        #
+        if self._bm25 is None:
+            return []
+
+        #
+        # Tokenize query.
+        #
+        query_tokens = self._tokenize(
+            query,
+        )
+
+        #
+        # Compute BM25 scores.
+        #
+        scores = self._bm25.get_scores(
+            query_tokens,
+        )
+
+        #
+        # Sort by score.
+        #
+        ranked = sorted(
+            enumerate(scores),
+            key=lambda item: item[1],
+            reverse=True,
+        )
+
+        results: list[SearchResult] = []
+        rank = 1
+
+        for index, score in ranked:
+            #
+            # Ignore zero-score documents.
+            # Only positive scores indicate actual keyword matches.
+            #
+            if score <= 0:
+                continue
+
+            chunk = self._chunks[index]
+
+            results.append(
+                SearchResult(
+                    chunk=chunk,
+                    score=float(score),
+                    rank=rank,
+                    source=RetrievalMethod.LEXICAL,
+                )
+            )
+
+            rank += 1
+            if len(results) >= k:
+                break
+
+        return results

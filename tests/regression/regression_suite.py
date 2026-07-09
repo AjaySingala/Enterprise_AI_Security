@@ -1,6 +1,9 @@
 """
 Enterprise AI Framework
 Regression Suite
+
+List all Test files in the "tests" folder:
+dir /b /s /a:-d | findstr /v /i "\__init__.py$ \.pyc$ \\__pycache__\\"
 """
 
 from __future__ import annotations
@@ -49,6 +52,11 @@ TESTS = [
         level="Component",
     ),
     TestCase(
+        module="tests.knowledge.test_chunker",
+        category="Knowledge SDK",
+        level="Component",
+    ),
+    TestCase(
         module="tests.knowledge.test_recursive_chunker",
         category="Knowledge SDK",
         level="Component",
@@ -92,6 +100,16 @@ TESTS = [
         module="tests.knowledge.test_knowledge_pipeline",
         category="Knowledge SDK",
         level="Integration",
+    ),
+    TestCase(
+        module="tests.knowledge.test_metadata_filter",
+        category="Knowledge SDK",
+        level="Integration",
+    ),
+    TestCase(
+        module="tests.knowledge.test_bm25_keyword_index",
+        category="Knowledge SDK",
+        level="Component",
     ),
 
     ###########################################################################
