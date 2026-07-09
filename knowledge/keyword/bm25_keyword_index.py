@@ -1,4 +1,21 @@
 """
+===============================================================================
+BM25 Keyword Index
+
+Status:
+    Experimental
+
+Notes:
+    The indexing functionality is implemented.
+    Search integration will be completed in Version 2
+    when Hybrid Search is introduced.
+
+Version:
+    2.0
+===============================================================================
+"""
+
+"""
 What is BM25?
 
 BM25 (Best Matching 25) is the most widely used keyword ranking algorithm in Information Retrieval.
@@ -102,68 +119,69 @@ class BM25KeywordIndex(BaseKeywordIndex):
         self._bm25 = None
 
     ###############################################################################
-    @trace
-    def search(
-        self,
-        query: str,
-        k: int = 5,
-    ) -> list[SearchResult]:
-        """
-        Perform BM25 keyword search.
-        """
-        #
-        # Empty index.
-        #
-        if self._bm25 is None:
-            return []
+    # Commented out for now. PARK IT!
+    # @trace
+    # def search(
+    #     self,
+    #     query: str,
+    #     k: int = 5,
+    # ) -> list[SearchResult]:
+    #     """
+    #     Perform BM25 keyword search.
+    #     """
+    #     #
+    #     # Empty index.
+    #     #
+    #     if self._bm25 is None:
+    #         return []
 
-        #
-        # Tokenize query.
-        #
-        query_tokens = self._tokenize(
-            query,
-        )
+    #     #
+    #     # Tokenize query.
+    #     #
+    #     query_tokens = self._tokenize(
+    #         query,
+    #     )
 
-        #
-        # Compute BM25 scores.
-        #
-        scores = self._bm25.get_scores(
-            query_tokens,
-        )
+    #     #
+    #     # Compute BM25 scores.
+    #     #
+    #     scores = self._bm25.get_scores(
+    #         query_tokens,
+    #     )
 
-        #
-        # Sort by score.
-        #
-        ranked = sorted(
-            enumerate(scores),
-            key=lambda item: item[1],
-            reverse=True,
-        )
+    #     #
+    #     # Sort by score.
+    #     #
+    #     ranked = sorted(
+    #         enumerate(scores),
+    #         key=lambda item: item[1],
+    #         reverse=True,
+    #     )
 
-        results: list[SearchResult] = []
-        rank = 1
+    #     results: list[SearchResult] = []
+    #     rank = 1
 
-        for index, score in ranked:
-            #
-            # Ignore zero-score documents.
-            # Only positive scores indicate actual keyword matches.
-            #
-            if score <= 0:
-                continue
+    #     for index, score in ranked:
+    #         #
+    #         # Ignore zero-score documents.
+    #         # Only positive scores indicate actual keyword matches.
+    #         #
+    #         if score <= 0:
+    #             continue
 
-            chunk = self._chunks[index]
+    #         chunk = self._chunks[index]
 
-            results.append(
-                SearchResult(
-                    chunk=chunk,
-                    score=float(score),
-                    rank=rank,
-                    source=RetrievalMethod.LEXICAL,
-                )
-            )
+    #         results.append(
+    #             SearchResult(
+    #                 chunk=chunk,
+    #                 score=float(score),
+    #                 rank=rank,
+    #                 source=RetrievalMethod.LEXICAL,
+    #             )
+    #         )
 
-            rank += 1
-            if len(results) >= k:
-                break
+    #         rank += 1
+    #         if len(results) >= k:
+    #             break
 
-        return results
+    #     return results
