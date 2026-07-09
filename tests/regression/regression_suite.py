@@ -49,7 +49,7 @@ TESTS = [
     TestCase(
         module="tests.knowledge.test_text_loader",
         category="Knowledge SDK",
-        level="Component",
+        level="Loader",
     ),
     TestCase(
         module="tests.knowledge.test_chunker",
@@ -105,6 +105,11 @@ TESTS = [
         module="tests.knowledge.test_metadata_filter",
         category="Knowledge SDK",
         level="Integration",
+    ),
+    TestCase(
+        module="tests.knowledge.test_pdf_loader",
+        category="Knowledge SDK",
+        level="Loader",
     ),
 
     ###########################################################################

@@ -35,6 +35,10 @@ class Document:
         default_factory=DocumentMetadata,
     )
 
+    pages: list[str] = field(
+        default_factory=list,
+    )
+
     created_at: datetime = field(
         default_factory=lambda: datetime.now(UTC)
     )

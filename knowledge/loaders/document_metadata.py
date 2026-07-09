@@ -27,6 +27,7 @@ class DocumentMetadata:
 
     # Processing.
     loader: str = ""
+    page_count: int = 0
     tags: list[str] = field(
         default_factory=list,
     )
