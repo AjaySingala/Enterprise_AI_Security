@@ -84,10 +84,10 @@ def main():
     print("----------------")
 
     for result in results:
-        print(f"Chunk: {result.embedding.chunk.content}")
+        print(f"Chunk: {result.chunk.content}")
         print(f"Rank : {result.rank}")
         print(f"Score: {result.score:.4f}")
-        print(f"Chunk Id: {result.embedding.chunk.chunk_id}")
+        print(f"Chunk Id: {result.chunk.chunk_id}")
         print()
         
 if __name__ == "__main__":

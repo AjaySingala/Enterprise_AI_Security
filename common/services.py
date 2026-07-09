@@ -42,6 +42,9 @@ from knowledge.pipelines import (
 from common.factories import VectorStoreFactory
 
 from knowledge.embeddings.openai_embedding_provider import OpenAIEmbeddingProvider
+from knowledge.retrieval.semantic_search_strategy import (
+    SemanticSearchStrategy,
+)
 
 ###############################################################################
 # Service Registry
@@ -73,6 +76,7 @@ class ServiceRegistry:
         self._retriever = Retriever(
             embedding_engine=self._embedding_engine,
             vector_store=self._vector_store,
+            strategy=SemanticSearchStrategy(),
         )
 
     ###########################################################################

@@ -50,7 +50,7 @@ def main():
     print("=" * 80)
     print()
 
-    print(response.llm_response.text)
+    print(response.llm_response)
 
     print()
     print("=" * 80)

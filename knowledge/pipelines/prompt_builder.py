@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from common.tracing.trace_decorator import trace
 
-from knowledge.vectorstores.search_result import SearchResult
+from knowledge.retrieval.search_result import SearchResult
 from knowledge.pipelines.prompt import Prompt
 
 ###############################################################################
@@ -22,7 +22,7 @@ class PromptBuilder:
         context_parts = []
 
         for result in results:
-            chunk = result.embedding.chunk
+            chunk = result.chunk
             context_parts.append(
                 f"""
 Document : {chunk.document_id}

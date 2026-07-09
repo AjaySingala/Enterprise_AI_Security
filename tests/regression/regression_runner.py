@@ -48,7 +48,12 @@ class RegressionRunner:
         print("Regression Test Suite")
         print("=" * 80)
 
+        category = ""
         for test in TESTS:
+            if category != test.category:
+                category = test.category
+                print(f"*** CATEGORY: {category} ***")
+
             self._run_test(test)
 
         total = time.perf_counter() - start

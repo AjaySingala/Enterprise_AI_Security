@@ -9,7 +9,9 @@ Version:
 ===============================================================================
 """
 from .retriever import Retriever
+from .search_result import SearchResult
 
 __all__ = [
     "Retriever",
+    "SearchResult",
 ]

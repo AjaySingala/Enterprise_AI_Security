@@ -97,10 +97,10 @@ def test_metadata_filter():
         print("*** No results. ***")
 
     for result in results:
-        print(f"Chunk: {result.embedding.chunk.content}")
+        print(f"Chunk: {result.chunk.content}")
         print(f"Rank : {result.rank}")
         print(f"Score: {result.score:.4f}")
-        print(f"Chunk Id: {result.embedding.chunk.chunk_id}")
+        print(f"Chunk Id: {result.chunk.chunk_id}")
         print()
 
         # assert (
@@ -207,10 +207,10 @@ def main():
 
     for result in results:
         print(
-            result.embedding.chunk.content,
-            result.embedding.chunk.document_id,
-            result.embedding.chunk.metadata.department,
-            result.embedding.chunk.metadata.country,
+            result.chunk.content,
+            result.chunk.document_id,
+            result.chunk.metadata.department,
+            result.chunk.metadata.country,
         )
 
     assert len(results) == 2
@@ -240,10 +240,10 @@ def main():
 
     for result in results:
         print(
-            result.embedding.chunk.content,
-            result.embedding.chunk.document_id,
-            result.embedding.chunk.metadata.department,
-            result.embedding.chunk.metadata.country,
+            result.chunk.content,
+            result.chunk.document_id,
+            result.chunk.metadata.department,
+            result.chunk.metadata.country,
         )
 
     assert len(results) == 1

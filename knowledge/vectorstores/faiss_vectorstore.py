@@ -11,9 +11,10 @@ from common.tracing.trace_decorator import trace
 
 from knowledge.embeddings.embedding import Embedding
 from knowledge.vectorstores.base_vectorstore import BaseVectorStore
-from knowledge.vectorstores.search_result import SearchResult
+from knowledge.retrieval.search_result import SearchResult
 from knowledge.query.metadata_query import MetadataQuery
 from knowledge.query.filter_operator import FilterOperator
+from knowledge.vectorstores.retrieval_method import RetrievalMethod
 
 class FAISSVectorStore(BaseVectorStore):
     # When the caller requests top_k=5, FAISS actually retrieves:
@@ -126,9 +127,11 @@ class FAISSVectorStore(BaseVectorStore):
 
             results.append(
                 SearchResult(
+                    chunk=embedding.chunk,
                     embedding=embedding,
                     score=float(distance),
                     rank=rank,
+                    source=RetrievalMethod.SEMANTIC,
                 )
             )
 

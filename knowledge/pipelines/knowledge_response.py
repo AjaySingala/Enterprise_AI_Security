@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 from common.llm.response import LLMResponse
 from knowledge.pipelines.prompt import Prompt
-from knowledge.vectorstores.search_result import SearchResult
+from knowledge.retrieval.search_result import SearchResult
 
 @dataclass(
     slots=True,
