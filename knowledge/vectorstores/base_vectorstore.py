@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from abc import ABC
 from abc import abstractmethod
+from pathlib import Path
 
 from knowledge.embeddings.embedding import Embedding
 from knowledge.query.metadata_query import MetadataQuery
@@ -40,3 +41,27 @@ class BaseVectorStore(ABC):
         self,
     ) -> None:
         pass
+
+    ###############################################################################
+    @abstractmethod
+    def save(
+        self,
+        folder: str | Path,
+    ) -> None:
+        """
+        Persist the vector store.
+        """
+        raise NotImplementedError
+
+
+    ###############################################################################
+    @abstractmethod
+    def load(
+        self,
+        folder: str | Path,
+    ) -> None:
+        """
+        Load a persisted vector store.
+        """
+        raise NotImplementedError
+    

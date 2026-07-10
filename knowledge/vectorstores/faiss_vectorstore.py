@@ -4,6 +4,9 @@ FAISS Vector Store
 
 from __future__ import annotations
 
+from pathlib import Path
+import pickle
+
 import faiss
 import numpy as np
 
@@ -187,3 +190,67 @@ class FAISSVectorStore(BaseVectorStore):
 
         return True
     
+    ###############################################################################
+    @trace
+    def save(
+        self,
+        folder: str | Path,
+    ) -> None:
+        """
+        Persist the FAISS index and embeddings.
+        """
+        folder = Path(folder)
+
+        folder.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        #
+        # Save FAISS index.
+        #
+        faiss.write_index(
+            self.index,
+            str(folder / "faiss.index"),
+        )
+
+        #
+        # Save embeddings.
+        #
+        with open(
+            folder / "embeddings.pkl",
+            "wb",
+        ) as file:
+            pickle.dump(
+                self.embeddings,
+                file,
+            )
+
+    ###############################################################################
+    @trace
+    def load(
+        self,
+        folder: str | Path,
+    ) -> None:
+        """
+        Load a persisted FAISS index.
+        """
+        folder = Path(folder)
+
+        #
+        # Load FAISS index.
+        #
+        self.index = faiss.read_index(
+            str(folder / "faiss.index"),
+        )
+
+        #
+        # Load embeddings.
+        #
+        with open(
+            folder / "embeddings.pkl",
+            "rb",
+        ) as file:
+            self.embeddings = pickle.load(
+                file,
+            )

@@ -9,6 +9,16 @@ __pycache__/
 logs/
 conversations/
 
+# --------------------------------------------------------------------
+# RAG / Vector Store Persistence
+# --------------------------------------------------------------------
+data/
+knowledge_index/
+vector_indexes/
+*.faiss
+*.index
+*.pkl
+
 [~][$]*
  
 # C extensions

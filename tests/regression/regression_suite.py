@@ -116,6 +116,11 @@ TESTS = [
         category="Knowledge SDK",
         level="Loader",
     ),
+    TestCase(
+        module="python -m tests.knowledge.test_faiss_persistence",
+        category="Knowledge SDK",
+        level="Component",
+    ),
 
     ###########################################################################
     # PII
