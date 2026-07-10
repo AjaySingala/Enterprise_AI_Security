@@ -121,6 +121,11 @@ TESTS = [
         category="Knowledge SDK",
         level="Component",
     ),
+    TestCase(
+        module="python -m tests.knowledge.test_rag_chat_engine",
+        category="Knowledge SDK",
+        level="Component",
+    ),
 
     ###########################################################################
     # PII
