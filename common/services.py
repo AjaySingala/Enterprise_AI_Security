@@ -118,6 +118,19 @@ class ServiceRegistry:
     def knowledge_pipeline(self) -> KnowledgePipeline:
         return self._knowledge_pipeline
 
+    # Helpers.
+    def load_knowledge_index(
+        self,
+        folder: str = "data/knowledge_index",
+    ) -> None:
+        self._vector_store.load(folder)
+
+    def save_knowledge_index(
+        self,
+        folder: str = "data/knowledge_index",
+    ) -> None:
+        self._vector_store.save(folder)
+        
 ###############################################################################
 # Singleton
 ###############################################################################

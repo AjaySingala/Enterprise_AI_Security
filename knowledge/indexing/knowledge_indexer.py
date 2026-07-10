@@ -88,3 +88,26 @@ class KnowledgeIndexer:
             embeddings,
         )
     
+    # Plural. Calls index_file() for each file.
+    def index_files(
+        self,
+        files: list[str | Path],
+    ) -> int:
+        """
+        Index multiple files.
+
+        Returns
+        -------
+        int
+            Total number of chunks indexed.
+        """
+        total_chunks = 0
+
+        for file in files:
+            print(f"Indexing: {file}")
+            total_chunks += self.index_file(
+                file,
+            )
+
+        return total_chunks
+    
