@@ -8,6 +8,11 @@ Document Models
 
 Version:
     1.1.0
+
+Notes:
+- When a new property is added, rebuild the index and test with:
+python -m applications.rag.build_index
+python -m applications.rag.rag_console
 ===============================================================================
 """
 
@@ -41,4 +46,8 @@ class Document:
 
     created_at: datetime = field(
         default_factory=lambda: datetime.now(UTC)
+    )
+
+    page_offsets: list[int] = field(
+        default_factory=list,
     )

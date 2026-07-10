@@ -59,9 +59,10 @@ class KnowledgeIndexer:
         #
         # Load
         #
-        document = self.loader.load(
-            file_path,
-        )
+        document = self.loader.load(file_path,)
+
+        if document is None:
+            raise RuntimeError(f"Loader returned None for '{file_path}'.")
 
         #
         # Chunk

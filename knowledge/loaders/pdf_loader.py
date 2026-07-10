@@ -30,15 +30,16 @@ class PDFLoader(BaseLoader):
 
         pdf = fitz.open(file_path)
         pages: list[str] = []
+        page_offsets: list[int] = []
+        offset = 0
 
         for page in pdf:
-            pages.append(
-                page.get_text()
-            )
+            page_text = page.get_text()
+            page_offsets.append(offset)
+            pages.append(page_text)
+            offset += len(page_text) + 2
 
-        text = "\n\n".join(
-            pages,
-        )
+        text = "\n\n".join(pages,)
 
         metadata = DocumentMetadata()
 
@@ -50,10 +51,11 @@ class PDFLoader(BaseLoader):
         metadata.page_count = len(pages,)
 
         return Document(
-            source=str(file_path),
             document_id=file_path.stem,
+            source=str(file_path),
             content=text,
             metadata=metadata,
             pages=pages,
+            page_offsets=page_offsets,
         )
     

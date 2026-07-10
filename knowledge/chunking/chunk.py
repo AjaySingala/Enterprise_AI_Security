@@ -11,6 +11,11 @@ Version:
 
 Python:
     3.13.11
+
+Notes:
+- When a new property is added, rebuild the index and test with:
+python -m applications.rag.build_index
+python -m applications.rag.rag_console
 ===============================================================================
 """
 
@@ -33,10 +38,10 @@ class Chunk:
     chunk_id: str = field(
         default_factory=lambda: str(uuid.uuid4())
     )
-
     metadata: DocumentMetadata = field(
         default_factory=DocumentMetadata,
     )
+    page_number: int | None = None
 
     @property
     def length(self) -> int:
